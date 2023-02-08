@@ -1,40 +1,56 @@
 import os
-import sys
 import pathlib
+import argparse
+from datetime import datetime
 
 
 class ArgumentsParser:
     def __init__(self):
-        if len(sys.argv) != 3:
-            print(
-                'Improper usage! Example:\n\npython3 make.py allure-report/ regression-1\n')
-            exit()
+        self.args = self.get_args()
 
-        self.test_cases_dir = None
-        self.init_test_cases_dir()
+        self.sheet_name = self.get_sheet_name()
+        self.test_cases_path = self.get_test_cases_dir()
+        self.config_path = self.get_config_path()
 
-        self.build_id = None
-        self.init_build_id()
+    @staticmethod
+    def get_args():
+        parser = argparse.ArgumentParser()
+        parser.add_argument('--sheet', help='specify sheet name. Current date and time is taken if not specified')
+        parser.add_argument('--report', help='path to allure-report. If not specified, the directory where script is '
+                                             'running from, will be taken')
+        parser.add_argument('--config', help='path to config.json. If not specified, the directory where script is '
+                                             'running from, will be taken')
+        return parser.parse_args()
 
-    def init_test_cases_dir(self):
-        report_path = sys.argv[1]
-        path_length = len(report_path)
-        last_char = report_path[path_length - 1]
-        if last_char == '/':
-            self.test_cases_dir = report_path + "data/test-cases/"
+    @staticmethod
+    def get_path(path):
+        if os.path.exists(path):  # check if path exists
+            return pathlib.Path(path)
         else:
-            self.test_cases_dir = report_path + "/data/test-cases/"
-
-    def init_build_id(self):
-        self.build_id = "#" + sys.argv[2]
-
-    def get_report_path(self):
-        print('Get allure-report path...')
-        if not os.path.exists(self.test_cases_dir):
-            print('The ' + self.test_cases_dir + ' directory does not exist!')
+            print('The ' + path + ' path does not exist!')
             exit()
-        return pathlib.Path(self.test_cases_dir)
 
-    def get_build_id(self):
-        print('Get build_id...')
-        return self.build_id
+    def get_sheet_name(self):
+        if self.args.sheet:  # if --sheet argument was passed
+            return self.args.sheet
+        else:
+            return datetime.now().strftime("%m/%d/%y | %H:%M:%S")
+
+    def get_test_cases_dir(self):
+        if self.args.report:  # if --report argument was passed
+            if self.args.report[len(self.args.report) - 1] == '/':  # Check if last char is '/'
+                path = self.args.report + "data/test-cases/"
+            else:
+                path = self.args.report + "/data/test-cases/"
+        else:
+            path = 'allure-report/data/test-cases/'
+
+        return self.get_path(path)
+
+    def get_config_path(self):
+        if self.args.config:  # if --config argument was passed
+            path = self.args.config
+        else:
+            path = 'config.json'
+
+        return self.get_path(path)

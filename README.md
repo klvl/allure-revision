@@ -14,7 +14,22 @@ The tool to parse allure-report and upload raw results to spreadsheet API.
    * Go to [Credentials](https://console.cloud.google.com/apis/credentials)
    * Click Create Credentials > OAuth client ID
    * Click Application type > Desktop app
-   * In the Name field, type a name for the credential. This name is only shown in the Google Cloud console.
-   * Click Create. The OAuth client created screen appears, showing your new Client ID and Client secret.
-   * Click OK. The newly created credential appears under OAuth 2.0 Client IDs. 
-   * Save the downloaded JSON file as credentials.json, and move the file to your working directory.
+   * In the Name field, type a name for the credential
+   * Click Create
+   * Click OK
+   * Save the downloaded JSON file as `credentials.json`
+4. Clone repo
+   ```shell
+   git clone https://github.com/klvl/allure-revision
+   ```
+5. Move your `credentials.json` file to a `main` folder
+   ```shell
+   mv ~/Downloads/credentials.json ~/allure-revision/main/ 
+   ```
+
+
+## Usage
+
+```shell
+python3 main/make.py --report=/path/to/allure-reprot --sheet=build-7
+```

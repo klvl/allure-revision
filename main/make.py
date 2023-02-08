@@ -11,11 +11,9 @@ SPREADSHEET_ID = '1EKAU39h3YQCr0kQZCF5DnxuWPxgJ9IoOaumRkbHtCf8'
 def main():
     # Parse arguments
     args = ArgumentsParser()
-    path = args.get_report_path()
-    build_id = args.get_build_id()
 
     # Parse failed tests
-    report = ReportParser(path)
+    report = ReportParser(args.test_cases_path)
     rows = report.get_rows()
 
     # Get rows and columns length
@@ -23,7 +21,7 @@ def main():
     columns_length = len(report.header)
 
     # Initialize service, create new sheet, upload rows
-    spreadsheet = SpreadsheetActions(SPREADSHEET_ID, build_id)
+    spreadsheet = SpreadsheetActions(SPREADSHEET_ID, args.sheet_name)
     spreadsheet.create_sheet()
     spreadsheet.upload_rows(rows)
 
