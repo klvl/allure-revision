@@ -17,7 +17,6 @@ class SpreadsheetUtil:
 
     # Refer to https://developers.google.com/sheets/api/quickstart/python#configure_the_sample
     def get_service(self):
-        print('Get spreadsheet service...')
         creds = None
         try:
             if os.path.exists(self.token_file_path):
@@ -37,7 +36,6 @@ class SpreadsheetUtil:
 
     # This request should be executed first because we get sheet ID from it
     def create_new_sheet(self, sheet_name, spreadsheet_id):
-        print('Create new sheet with ' + sheet_name + ' sheet name...')
         requests = [{
             'addSheet': {
                 'properties': {
@@ -56,11 +54,9 @@ class SpreadsheetUtil:
         except HttpError as err:
             print(err)
 
-        print(str(response) + '\n')
         return response
 
     def upload_rows(self, sheet_name, input_range, spreadsheet_id, rows):
-        print('Populate sheet with rows...')
         input_range = sheet_name + '!' + input_range
         value_range_body = {
             'range': str(input_range),
@@ -76,8 +72,6 @@ class SpreadsheetUtil:
                 body=value_range_body).execute()
         except HttpError as err:
             print(err)
-
-        print(str(response) + '\n')
 
 
 class SpreadsheetActions:

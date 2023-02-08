@@ -59,7 +59,7 @@ def main():
     spreadsheet.execute_requests()
 
     # Print successful result message
-    print('Aggregation was successful! To check results, follow this link:\n' + spreadsheet.get_link_to_sheet())
+    print('Aggregation was successful! Results:\n' + spreadsheet.get_link_to_sheet())
 
 
 if __name__ == '__main__':

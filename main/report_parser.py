@@ -10,7 +10,6 @@ class ReportParser:
         self.retry_ref = []
 
     def get_rows(self):
-        print('Get failed tests array...')
         # Iterate through given path
         for file in self.report_path.iterdir():
             if not file.is_dir():
