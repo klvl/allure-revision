@@ -3,11 +3,10 @@
 
 # Python
 __pycache__/
-*.py[cod]
 
 # Credentials
 main/credentials.json
 main/token.json
 
-# Old
-old
+# Allure report
+allure-report
