@@ -12,12 +12,12 @@ def main():
     config = ConfigParser(args.config_path)
 
     # Parse failed tests
-    report = ReportParser(args.test_cases_path)
+    report = ReportParser(args.test_cases_path, config)
     rows = report.get_rows()
 
     # Get rows and columns length
     rows_length = len(rows)
-    columns_length = len(report.header)
+    columns_length = len(config.columns)
 
     # Initialize service, create new sheet, upload rows
     spreadsheet = SpreadsheetActions(config.spreadsheet_id, args.sheet_name)
@@ -58,7 +58,7 @@ def main():
     spreadsheet.execute_requests()
 
     # Print successful result message
-    print('Aggregation was successful! Results:\n' + spreadsheet.get_link_to_sheet())
+    print('Uploaded on "' + args.sheet_name + '" sheet: ' + spreadsheet.get_link_to_sheet())
 
 
 if __name__ == '__main__':

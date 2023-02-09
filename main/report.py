@@ -2,12 +2,17 @@ import json
 
 
 class ReportParser:
-    def __init__(self, report_path):
-        self.header = ['TEST', 'MESSAGE', 'CATEGORY', 'STATUS', 'REVISION', 'COMMENTS']
-        self.rows = []
-        self.rows.append(self.header)
+    def __init__(self, report_path, config):
         self.report_path = report_path
+        self.config = config
+        self.rows = self.init_rows()
         self.retry_ref = []
+
+    def init_rows(self):
+        row = []
+        for column in self.config.columns:
+            row.append(column['columnName'])
+        return [row]
 
     def get_rows(self):
         # Iterate through given path
@@ -27,11 +32,12 @@ class ReportParser:
                     self.rows.append(row)
 
         # Validate failed tests found
-        failed_tests_amount = self.get_failed_tests_amount()
-        if not failed_tests_amount:
-            print('No failed tests found! Exiting...')
+        found_tests_amount = len(self.rows) - 1  # All rows without header line
+        if not found_tests_amount:
+            print('No tests with ' + str(self.config.statuses) + ' status(-es) found!')
             exit()
-        print('There were ' + str(failed_tests_amount) + ' failed tests found!')
+        print('There were ' + str(found_tests_amount) + ' tests with ' + str(self.config.statuses) +
+              ' status(-es) found!')
 
         return self.rows
 
@@ -49,26 +55,29 @@ class ReportParser:
                 return row
 
         # If status is passed return empty row
-        if status != 'passed' and status != 'skipped':
-            # Add TEST name to row array
-            row.append(test_name)
+        if status in self.config.statuses:
+            for column in self.config.columns:
+                # Add empty row
+                if not column['reportValue']:
+                    row.append('')
 
-            # Get MESSAGE and add to row array
-            message = self.get_message(data)
-            row.append(message)
+                # Add TEST name to row array
+                if column['reportValue'] == 'fullName':
+                    row.append(test_name)
 
-            # Get CATEGORY and add to row array
-            category = self.get_category(data)
-            row.append(category)
+                # Get MESSAGE and add to row array
+                if column['reportValue'] == 'message':
+                    message = self.get_message(data)
+                    row.append(message)
 
-            # Add STATUS to row array
-            row.append(status)
+                # Get CATEGORY and add to row array
+                if column['reportValue'] == 'category':
+                    category = self.get_category(data)
+                    row.append(category)
 
-            # Add REVISION column
-            row.append('')
-
-            # Add COMMENTS column
-            row.append('')
+                # Add STATUS to row array
+                if column['reportValue'] == 'status':
+                    row.append(status)
 
         # Collect test name and stop time
         self.collect_retry_ref(data)
@@ -123,6 +132,3 @@ class ReportParser:
     @staticmethod
     def get_stop_time(data):
         return data['time']['stop']
-
-    def get_failed_tests_amount(self):
-        return len(self.rows) - 1

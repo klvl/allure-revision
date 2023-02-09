@@ -1,3 +1,36 @@
 {
-  "spreadsheetId": "1EKAU39h3YQCr0kQZCF5DnxuWPxgJ9IoOaumRkbHtCf8"
+  "statuses": [ "failed", "broken" ],
+  "columns": [
+    {
+      "columnName": "TEST",
+      "reportValue": "fullName",
+      "index": 0
+    },
+    {
+      "columnName": "MESSAGE",
+      "reportValue": "message",
+      "index": 1
+    },
+    {
+      "columnName": "CATEGORY",
+      "reportValue": "category",
+      "index": 2
+    },
+    {
+      "columnName": "STATUS",
+      "reportValue": "status",
+      "index": 3
+    },
+    {
+      "columnName": "REVISION",
+      "index": 4
+    },
+    {
+      "columnName": "COMMENTS",
+      "index": 5
+    }
+  ],
+  "spreadsheet": {
+    "id": "1EKAU39h3YQCr0kQZCF5DnxuWPxgJ9IoOaumRkbHtCf8"
+  }
 }
