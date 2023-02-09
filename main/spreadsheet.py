@@ -7,6 +7,9 @@ from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 
 
+COLUMN_NAMES = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'G', 'K', 'L', 'M', 'N', 'O']
+
+
 class SpreadsheetUtil:
     def __init__(self):
         # If modifying these scopes, delete the file token.json
@@ -76,6 +79,106 @@ class SpreadsheetUtil:
         except HttpError as err:
             print(err)
 
+    @staticmethod
+    def get_update_dimension_rq(sheet_id, dimension, start_index, end_index, pixel_size):
+        return {
+            'updateDimensionProperties': {
+                'range': {
+                    'sheetId': sheet_id,
+                    'dimension': dimension,
+                    'startIndex': start_index,
+                    'endIndex': end_index
+                },
+                'properties': {
+                    'pixelSize': pixel_size
+                },
+                'fields': 'pixelSize'
+            }
+        }
+
+    @staticmethod
+    def get_update_column_size_rq(sheet_id, column_index, pixel_size):
+        return {
+            'updateDimensionProperties': {
+                'range': {
+                    'sheetId': sheet_id,
+                    'dimension': 'COLUMNS',
+                    'startIndex': column_index,
+                    'endIndex': column_index + 1
+                },
+                'properties': {
+                    'pixelSize': pixel_size
+                },
+                'fields': 'pixelSize'
+            }
+        }
+
+    @staticmethod
+    def get_sort_request(sheet_id, start_row_index, end_row_index, start_column_index, end_column_index,
+                         sort_order, dimension_index):
+        return {
+            'sortRange': {
+                'range': {
+                    'sheetId': sheet_id,
+                    'startRowIndex': start_row_index,
+                    'endRowIndex': end_row_index,
+                    'startColumnIndex': start_column_index,
+                    'endColumnIndex': end_column_index
+                },
+                'sortSpecs': [{
+                    'sortOrder': sort_order,
+                    'dimensionIndex': dimension_index
+                }]
+            }
+        }
+
+    @staticmethod
+    def get_freeze_rows_rq(sheet_id, freeze_first_rows_amount):
+        return {
+            'updateSheetProperties': {
+                'properties': {
+                    'sheetId': sheet_id,
+                    'gridProperties': {
+                        'frozenRowCount': freeze_first_rows_amount
+                    }
+                },
+                'fields': 'gridProperties.frozenRowCount'
+            }
+        }
+
+    @staticmethod
+    def get_conditional_formatting_rq(sheet_id, start_column_index, end_column_index, start_row_index, end_row_index,
+                                      formula, color):
+        return {
+            'addConditionalFormatRule': {
+                'rule': {
+                    'ranges': [
+                        {
+                            'sheetId': sheet_id,
+                            'startColumnIndex': start_column_index,
+                            'endColumnIndex': end_column_index,
+                            'startRowIndex': start_row_index,
+                            'endRowIndex': end_row_index
+                        }
+                    ],
+                    'booleanRule': {
+                        'condition': {
+                            'type': 'CUSTOM_FORMULA',
+                            'values': [
+                                {
+                                    'userEnteredValue': formula
+                                }
+                            ]
+                        },
+                        'format': {
+                            'backgroundColor': color
+                        }
+                    }
+                },
+                'index': 0
+            }
+        }
+
 
 class SpreadsheetActions:
     def __init__(self, config, sheet_name, rows):
@@ -120,103 +223,47 @@ class SpreadsheetActions:
     def upload_rows(self):
         self.util.upload_rows(self.sheet_name, 'A:Z', spreadsheet_id=self.config.spreadsheet_id, rows=self.rows)
 
-    def get_update_dimension_rq(self, dimension, start_index, end_index, pixel_size):
-        return {
-            'updateDimensionProperties': {
-                'range': {
-                    'sheetId': self.sheet_id,
-                    'dimension': dimension,
-                    'startIndex': start_index,
-                    'endIndex': end_index
-                },
-                'properties': {
-                    'pixelSize': pixel_size
-                },
-                'fields': 'pixelSize'
-            }
-        }
+    def collect_update_column_size_requests(self):
+        for column in self.config.columns:
+            if column['size']:
+                request = self.util.get_update_column_size_rq(self.sheet_id, column['index'], column['size'])
+                self.requests.append(request)
 
-    def collect_update_column_size_rq(self, column_index, pixel_size):
-        self.requests.append({
-            'updateDimensionProperties': {
-                'range': {
-                    'sheetId': self.sheet_id,
-                    'dimension': 'COLUMNS',
-                    'startIndex': column_index,
-                    'endIndex': column_index + 1
-                },
-                'properties': {
-                    'pixelSize': pixel_size
-                },
-                'fields': 'pixelSize'
-            }
-        })
+    def collect_sort_request(self):
+        request = self.util.get_sort_request(sheet_id=self.sheet_id,
+                                             start_row_index=1,
+                                             end_row_index=len(self.rows) + 1,
+                                             start_column_index=0,
+                                             end_column_index=len(self.config.columns) + 1,
+                                             sort_order='ASCENDING',
+                                             dimension_index=0)
+        self.requests.append(request)
 
-    def collect_sort_rq(self, start_row_index, start_column_index, sort_order, dimension_index):
-        self.requests.append({
-            'sortRange': {
-                'range': {
-                    'sheetId': self.sheet_id,
-                    'startRowIndex': start_row_index,
-                    'endRowIndex': len(self.rows)+1,
-                    'startColumnIndex': start_column_index,
-                    'endColumnIndex': len(self.config.columns)+1
-                },
-                'sortSpecs': [{
-                    'sortOrder': sort_order,
-                    'dimensionIndex': dimension_index
-                }]
-            }
-        })
+    def collect_freeze_rows_request(self):
+        request = self.util.get_freeze_rows_rq(self.sheet_id, 1)
+        self.requests.append(request)
 
-    def collect_freeze_rows_rq(self, freeze_first_rows_amount):
-        self.requests.append({
-            'updateSheetProperties': {
-                'properties': {
-                    'sheetId': self.sheet_id,
-                    'gridProperties': {
-                        'frozenRowCount': freeze_first_rows_amount
-                    }
-                },
-                'fields': 'gridProperties.frozenRowCount'
-            }
-        })
+    def collect_conditional_formatting_to_all_rows(self):
+        for column in self.config.columns:
+            if column['conditionalFormatting']:
+                for formatting_rule in column['conditionalFormatting']:
+                    formula = self.get_conditional_formatting_formula(column, formatting_rule)
+                    color = self.COLORS[formatting_rule['color']]
+                    for column_index in range(len(self.config.columns)):
+                        request = self.util.get_conditional_formatting_rq(
+                            sheet_id=self.sheet_id,
+                            start_column_index=column_index,
+                            end_column_index=column_index+1,
+                            start_row_index=1,
+                            end_row_index=len(self.rows)+1,
+                            formula=formula,
+                            color=color)
+                        self.requests.append(request)
 
-    def collect_conditional_formatting_rq(self, start_column_index, end_column_index, start_row_index, end_row_index,
-                                          formula, color):
-        self.requests.append({
-            'addConditionalFormatRule': {
-                'rule': {
-                    'ranges': [
-                        {
-                            'sheetId': self.sheet_id,
-                            'startColumnIndex': start_column_index,
-                            'endColumnIndex': end_column_index,
-                            'startRowIndex': start_row_index,
-                            'endRowIndex': end_row_index
-                        }
-                    ],
-                    'booleanRule': {
-                        'condition': {
-                            'type': 'CUSTOM_FORMULA',
-                            'values': [
-                                {
-                                    'userEnteredValue': formula
-                                }
-                            ]
-                        },
-                        'format': {
-                            'backgroundColor': color
-                        }
-                    }
-                },
-                'index': 0
-            }
-        })
-
-    def collect_conditional_formatting_to_all_rows(self, formula, color):
-        for column in range(len(self.config.columns)):
-            self.collect_conditional_formatting_rq(column, column + 1, 1, len(self.rows) + 1, formula, self.COLORS[color])
+    @staticmethod
+    def get_conditional_formatting_formula(column, formatting_rule):
+        cell_ref = COLUMN_NAMES[column['index']] + '2'
+        return '=EQ(' + cell_ref + ', "' + formatting_rule['ifValue'] + '")'
 
     def execute_requests(self):
         self.util.batch_update(self.config.spreadsheet_id, self.requests)
@@ -225,3 +272,4 @@ class SpreadsheetActions:
     def get_link_to_sheet(self):
         return 'https://docs.google.com/spreadsheets/d/' + str(self.config.spreadsheet_id) + '/edit#gid=' + \
                str(self.sheet_id)
+

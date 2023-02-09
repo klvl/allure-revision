@@ -5,14 +5,15 @@ class ReportParser:
     def __init__(self, report_path, config):
         self.report_path = report_path
         self.config = config
-        self.rows = []
         self.retry_ref = []
+        self.rows = []
+        self.get_rows()
 
     def get_rows(self):
         # Add header row
         header = []
         for column in self.config.columns:
-            header.append(column['columnName'])
+            header.append(column['name'])
         self.rows.append(header)
 
         # Iterate through given path

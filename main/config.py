@@ -1,6 +1,7 @@
 import json
 
-AVAILABLE_REPORT_VALUES = ['fullName', 'message', 'category', 'status', False]
+AVAILABLE_REPORT_VALUES = ['fullName', 'message', 'category', 'status']
+AVAILABLE_COLORS = ['light_red', 'dark_red', 'yellow', 'green']
 
 
 class ConfigParser:
@@ -73,12 +74,18 @@ class ConfigParser:
             print('The "columns" array cannot be empty!')
             exit()
 
-        # Validate all columns have 'report' param
+        # Validate columns do not exceed maximum allowed amount. See COLUMN_NAMES amount array in spreadsheet.py
+        if len(columns) > 15:
+            print('The maximum supported columns amount is 15! '
+                  'Try less amount of columns or wait for the next release!')
+            exit()
+
+        # Validate all columns have 'name' param
         for column in columns:
             try:
-                column['columnName']
+                column['name']
             except KeyError:
-                print('There is no "columnName" param in all columns!')
+                print('The "column.name" param is set not for all columns in config.json!')
                 exit()
 
         # Validate all columns have 'index' param
@@ -86,7 +93,7 @@ class ConfigParser:
             try:
                 column['index']
             except KeyError:
-                print('There is no "index" param in all columns!')
+                print('The "index" param is set not for all columns in config.json!')
                 exit()
 
         # Validate indexes are unique
@@ -100,21 +107,50 @@ class ConfigParser:
                 print('The index ' + str(column['index']) + ' is duplicated!')
                 exit()
 
+        # Check if reportValue is valid in all columns
+        for column in columns:
+            try:
+                if column['reportValue'] not in AVAILABLE_REPORT_VALUES:
+                    print('The reportValue "' + column['reportValue'] + '" is not valid in config.json!\n'
+                                                                        'Permitted values: ' + str(AVAILABLE_REPORT_VALUES))
+                    exit()
+            except KeyError:
+                continue
+
         # Set empty reportValues
         for column in columns:
             try:
                 column['reportValue']
             except KeyError:
                 column['reportValue'] = False
-
-        # Check if reportValue is valid in all columns
+                
+        # Set empty sizes
         for column in columns:
-            if column['reportValue'] not in AVAILABLE_REPORT_VALUES:
-                print('The reportValue "' + column['reportValue'] + '" is not valid in config.json!\nPermitted values: '
-                      + str(AVAILABLE_REPORT_VALUES))
-                exit()
+            try:
+                column['size']
+            except KeyError:
+                column['size'] = False
 
-        # Sort columns
+        # Validate conditional formatting
+        for column in columns:
+            try:
+                rules = column['conditionalFormatting']
+                for rule in rules:
+                    try:
+                        if rule['color'] not in AVAILABLE_COLORS:
+                            print('The color "' + rule['color'] + '" is not available yet! '
+                                                                  'Try one of the following:\n' + str(AVAILABLE_COLORS))
+                    except KeyError:
+                        print('There is no color attribute in config.json! Affected column:\n' + column)
+                        exit()
+                    try:
+                        rule['ifValue']
+                    except KeyError:
+                        print('The ifValue parameter should be present in conditionalFormatting in config.json!')
+            except KeyError:
+                column['conditionalFormatting'] = False  # Set empty conditional formatting
+
+        # Sort columns by index
         final_columns = []
         for i in range(len(columns)):
             for column in columns:
@@ -122,4 +158,3 @@ class ConfigParser:
                     final_columns.append(column)
 
         return final_columns
-

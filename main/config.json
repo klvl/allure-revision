@@ -2,31 +2,61 @@
   "statuses": [ "failed", "broken" ],
   "columns": [
     {
-      "columnName": "TEST",
+      "name": "TEST",
+      "size": 700,
       "reportValue": "fullName",
       "index": 0
     },
     {
-      "columnName": "MESSAGE",
+      "name": "MESSAGE",
+      "size": 250,
       "reportValue": "message",
       "index": 1
     },
     {
-      "columnName": "CATEGORY",
+      "name": "CATEGORY",
+      "size": 200,
       "reportValue": "category",
       "index": 2
     },
     {
-      "columnName": "STATUS",
+      "name": "STATUS",
+      "size": 80,
       "reportValue": "status",
-      "index": 3
+      "index": 3,
+      "conditionalFormatting": [
+        {
+          "color": "light_red",
+          "ifValue": "failed"
+        },
+        {
+          "color": "yellow",
+          "ifValue": "broken"
+        }
+      ]
     },
     {
-      "columnName": "REVISION",
-      "index": 4
+      "name": "REVISION",
+      "size": 80,
+      "index": 4,
+      "conditionalFormatting": [
+        {
+          "color": "green",
+          "ifValue": "fixed"
+        },
+        {
+          "color": "green",
+          "ifValue": "passed"
+        },
+        {
+          "color": "dark_red",
+          "ifValue": "bug"
+        }
+      ]
     },
     {
-      "columnName": "COMMENTS",
+      "name": "COMMENTS",
+      "size": 300,
       "index": 5
     }
   ],
