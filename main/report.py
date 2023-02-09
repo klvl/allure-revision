@@ -5,16 +5,16 @@ class ReportParser:
     def __init__(self, report_path, config):
         self.report_path = report_path
         self.config = config
-        self.rows = self.init_rows()
+        self.rows = []
         self.retry_ref = []
 
-    def init_rows(self):
-        row = []
-        for column in self.config.columns:
-            row.append(column['columnName'])
-        return [row]
-
     def get_rows(self):
+        # Add header row
+        header = []
+        for column in self.config.columns:
+            header.append(column['columnName'])
+        self.rows.append(header)
+
         # Iterate through given path
         for file in self.report_path.iterdir():
             if not file.is_dir():

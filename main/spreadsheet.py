@@ -35,12 +35,16 @@ class SpreadsheetUtil:
             print(err)
 
     # This request should be executed first because we get sheet ID from it
-    def create_new_sheet(self, sheet_name, spreadsheet_id):
+    def create_new_sheet(self, sheet_name, spreadsheet_id, row_count, column_count):
         requests = [{
             'addSheet': {
                 'properties': {
                     'title': sheet_name,
-                }
+                    'gridProperties': {
+                        'rowCount': row_count,
+                        'columnCount': column_count
+                    }
+                },
             }
         }]
         response = self.batch_update(spreadsheet_id, requests)
@@ -63,9 +67,8 @@ class SpreadsheetUtil:
             'values': rows
         }
 
-        response = None
         try:
-            response = self.service.spreadsheets().values().update(
+            self.service.spreadsheets().values().update(
                 spreadsheetId=spreadsheet_id,
                 range=input_range,
                 valueInputOption='RAW',
@@ -75,9 +78,10 @@ class SpreadsheetUtil:
 
 
 class SpreadsheetActions:
-    def __init__(self, spreadsheet_id, sheet_name):
-        self.spreadsheet_id = spreadsheet_id
+    def __init__(self, config, sheet_name, rows):
+        self.config = config
         self.sheet_name = sheet_name
+        self.rows = rows
         self.sheet_id = None
         # rgb scheme, where r = r/255, g = g/255, b = b/255
         self.COLORS = {
@@ -105,35 +109,16 @@ class SpreadsheetActions:
         self.requests = []
         self.util = SpreadsheetUtil()
 
-    def create_sheet(self):  # This request should be executed first because we get sheet ID from it
-        self.sheet_id = self.util.create_new_sheet(self.sheet_name, self.spreadsheet_id)
+    # This request should be executed first because we get sheet ID from it
+    def create_sheet(self):
+        rows_count = len(self.rows)
+        columns_count = len(self.config.columns)
 
-    def upload_rows(self, rows):
-        self.util.upload_rows(self.sheet_name, 'A:Z', spreadsheet_id=self.spreadsheet_id, rows=rows)
+        self.sheet_id = self.util.create_new_sheet(
+            self.sheet_name, self.config.spreadsheet_id, rows_count, columns_count)
 
-    def collect_delete_extra_columns_rq(self, columns_length):
-        self.requests.append({
-            'deleteDimension': {
-                'range': {
-                    'sheetId': self.sheet_id,
-                    'dimension': 'COLUMNS',
-                    'startIndex': columns_length,
-                    'endIndex': 26
-                }
-            }
-        })
-
-    def collect_delete_extra_rows_rq(self, rows_length):
-        self.requests.append({
-            'deleteDimension': {
-                'range': {
-                    'sheetId': self.sheet_id,
-                    'dimension': 'ROWS',
-                    'startIndex': rows_length,
-                    'endIndex': 1000
-                }
-            }
-        })
+    def upload_rows(self):
+        self.util.upload_rows(self.sheet_name, 'A:Z', spreadsheet_id=self.config.spreadsheet_id, rows=self.rows)
 
     def get_update_dimension_rq(self, dimension, start_index, end_index, pixel_size):
         return {
@@ -167,16 +152,15 @@ class SpreadsheetActions:
             }
         })
 
-    def collect_sort_rq(self, start_row_index, end_row_index, start_column_index, end_column_index, sort_order,
-                        dimension_index):
+    def collect_sort_rq(self, start_row_index, start_column_index, sort_order, dimension_index):
         self.requests.append({
             'sortRange': {
                 'range': {
                     'sheetId': self.sheet_id,
                     'startRowIndex': start_row_index,
-                    'endRowIndex': end_row_index+1,
+                    'endRowIndex': len(self.rows)+1,
                     'startColumnIndex': start_column_index,
-                    'endColumnIndex': end_column_index+1
+                    'endColumnIndex': len(self.config.columns)+1
                 },
                 'sortSpecs': [{
                     'sortOrder': sort_order,
@@ -185,13 +169,13 @@ class SpreadsheetActions:
             }
         })
 
-    def collect_freeze_rows_rq(self, rows_count):
+    def collect_freeze_rows_rq(self, freeze_first_rows_amount):
         self.requests.append({
             'updateSheetProperties': {
                 'properties': {
                     'sheetId': self.sheet_id,
                     'gridProperties': {
-                        'frozenRowCount': rows_count
+                        'frozenRowCount': freeze_first_rows_amount
                     }
                 },
                 'fields': 'gridProperties.frozenRowCount'
@@ -230,13 +214,14 @@ class SpreadsheetActions:
             }
         })
 
-    def collect_conditional_formatting_to_all_rows(self, columns_length, rows_length, formula, color):
-        for column in range(columns_length):
-            self.collect_conditional_formatting_rq(column, column + 1, 1, rows_length + 1, formula, self.COLORS[color])
+    def collect_conditional_formatting_to_all_rows(self, formula, color):
+        for column in range(len(self.config.columns)):
+            self.collect_conditional_formatting_rq(column, column + 1, 1, len(self.rows) + 1, formula, self.COLORS[color])
 
     def execute_requests(self):
-        self.util.batch_update(self.spreadsheet_id, self.requests)
+        self.util.batch_update(self.config.spreadsheet_id, self.requests)
         self.requests = []
 
     def get_link_to_sheet(self):
-        return 'https://docs.google.com/spreadsheets/d/' + str(self.spreadsheet_id) + '/edit#gid=' + str(self.sheet_id)
+        return 'https://docs.google.com/spreadsheets/d/' + str(self.config.spreadsheet_id) + '/edit#gid=' + \
+               str(self.sheet_id)

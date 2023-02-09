@@ -15,20 +15,12 @@ def main():
     report = ReportParser(args.test_cases_path, config)
     rows = report.get_rows()
 
-    # Get rows and columns length
-    rows_length = len(rows)
-    columns_length = len(config.columns)
-
     # Initialize service, create new sheet, upload rows
-    spreadsheet = SpreadsheetActions(config.spreadsheet_id, args.sheet_name)
+    spreadsheet = SpreadsheetActions(config, args.sheet_name, rows)
     spreadsheet.create_sheet()
-    spreadsheet.upload_rows(rows)
+    spreadsheet.upload_rows()
 
     # Collect requests
-
-    # Collect delete extra rows and columns requests
-    spreadsheet.collect_delete_extra_columns_rq(columns_length)
-    spreadsheet.collect_delete_extra_rows_rq(rows_length)
 
     # Collect change column sizes requests
     spreadsheet.collect_update_column_size_rq(0, 700)
@@ -39,22 +31,17 @@ def main():
     spreadsheet.collect_update_column_size_rq(5, 300)
 
     # Collect sort columns request
-    spreadsheet.collect_sort_rq(1, rows_length, 0, columns_length, 'ASCENDING', 0)
+    spreadsheet.collect_sort_rq(1, 0, 'ASCENDING', 0)
 
     # Collect freeze header column request
     spreadsheet.collect_freeze_rows_rq(1)
 
     # Set conditional formatting
-    spreadsheet.collect_conditional_formatting_to_all_rows(columns_length, rows_length,
-                                                           '=EQ(D2, "failed")', 'light_red')
-    spreadsheet.collect_conditional_formatting_to_all_rows(columns_length, rows_length,
-                                                           '=EQ(D2, "broken")', 'yellow')
-    spreadsheet.collect_conditional_formatting_to_all_rows(columns_length, rows_length,
-                                                           '=EQ(E2, "fixed")', 'green')
-    spreadsheet.collect_conditional_formatting_to_all_rows(columns_length, rows_length,
-                                                           '=EQ(E2, "passed")', 'green')
-    spreadsheet.collect_conditional_formatting_to_all_rows(columns_length, rows_length,
-                                                           '=EQ(E2, "bug")', 'dark_red')
+    spreadsheet.collect_conditional_formatting_to_all_rows('=EQ(D2, "failed")', 'light_red')
+    spreadsheet.collect_conditional_formatting_to_all_rows('=EQ(D2, "broken")', 'yellow')
+    spreadsheet.collect_conditional_formatting_to_all_rows('=EQ(E2, "fixed")', 'green')
+    spreadsheet.collect_conditional_formatting_to_all_rows('=EQ(E2, "passed")', 'green')
+    spreadsheet.collect_conditional_formatting_to_all_rows('=EQ(E2, "bug")', 'dark_red')
     spreadsheet.execute_requests()
 
     # Print successful result message
