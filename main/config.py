@@ -5,10 +5,10 @@ AVAILABLE_COLORS = ['light_red', 'dark_red', 'yellow', 'green']
 
 
 class ConfigParser:
-    def __init__(self, config_path):
+    def __init__(self, config_path, spreadsheet_id_from_args):
         self.config = self.init_config(config_path)
         self.spreadsheet = self.init_spreadsheet()
-        self.spreadsheet_id = self.init_spreadsheet_id()
+        self.spreadsheet_id = self.init_spreadsheet_id(spreadsheet_id_from_args)
         self.statuses = self.init_statuses()
         self.columns = self.init_columns()
 
@@ -24,11 +24,14 @@ class ConfigParser:
             print('There is no "spreadsheet" parameter in config.json!')
             exit()
 
-    def init_spreadsheet_id(self):
+    def init_spreadsheet_id(self, spreadsheet_id_from_args):
+        if spreadsheet_id_from_args:
+            return spreadsheet_id_from_args
+
         try:
             return self.spreadsheet['id']
         except KeyError:
-            print('There is no "spreadsheet.id" parameter in config.json!')
+            print('The "spreadsheet.id" should be passed as --id argument or be specified in config.json!')
             exit()
 
     def init_statuses(self):

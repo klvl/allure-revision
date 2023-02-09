@@ -50,18 +50,21 @@ class SpreadsheetUtil:
                 },
             }
         }]
-        response = self.batch_update(spreadsheet_id, requests)
+        response = None
+        try:
+            response = self.batch_update(spreadsheet_id, requests)
+        except HttpError as err:
+            if err.reason == 'Requested entity was not found.':
+                print('The Google API did not find your spreadsheet! Check your spreadsheet_id and try again!')
+                exit()
+            else:
+                print("Something went wrong! Contact developer for assistance!")
+                exit()
         return response.get('replies')[0].get('addSheet').get('properties').get('sheetId')
 
     def batch_update(self, spreadsheet_id, requests):
         body = {'requests': requests}
-        response = None
-        try:
-            response = self.service.spreadsheets().batchUpdate(spreadsheetId=spreadsheet_id, body=body).execute()
-        except HttpError as err:
-            print(err)
-
-        return response
+        return self.service.spreadsheets().batchUpdate(spreadsheetId=spreadsheet_id, body=body).execute()
 
     def upload_rows(self, sheet_name, input_range, spreadsheet_id, rows):
         input_range = sheet_name + '!' + input_range

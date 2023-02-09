@@ -9,7 +9,7 @@ from spreadsheet import SpreadsheetActions
 def main():
     # Parse arguments
     args = ArgumentsParser()
-    config = ConfigParser(args.config_path)
+    config = ConfigParser(args.config_path, args.spreadsheet_id)
 
     # Parse failed tests
     report = ReportParser(args.test_cases_path, config)
