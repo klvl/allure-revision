@@ -266,7 +266,7 @@ class SpreadsheetActions:
     @staticmethod
     def get_conditional_formatting_formula(column, formatting_rule):
         cell_ref = COLUMN_NAMES[column['index']] + '2'
-        return '=EQ(' + cell_ref + ', "' + formatting_rule['ifValue'] + '")'
+        return '=EQ(' + cell_ref + '; "' + formatting_rule['ifValue'] + '")'
 
     def execute_requests(self):
         self.util.batch_update(self.config.spreadsheet_id, self.requests)
