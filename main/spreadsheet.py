@@ -1,4 +1,4 @@
-import os
+import json
 
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
@@ -9,30 +9,42 @@ from googleapiclient.errors import HttpError
 
 COLUMN_NAMES = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'G', 'K', 'L', 'M', 'N', 'O']
 
+CREDS = {
+    "installed": {
+        "client_id": "555723526226-n96l2mat5jo50bo26hef7g7lt2hrtsd7.apps.googleusercontent.com",
+        "project_id": "allure-revisioin",
+        "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+        "token_uri": "https://oauth2.googleapis.com/token",
+        "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+        "client_secret": "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",
+        "redirect_uris": [
+            "http://localhost"
+        ]
+    }
+}
+
 
 class SpreadsheetUtil:
-    def __init__(self):
+    def __init__(self, token):
         # If modifying these scopes, delete the file token.json
         self.scopes = ['https://www.googleapis.com/auth/spreadsheets']
-        self.token_file_path = os.path.abspath('main/token.json')
-        self.credentials_file_path = os.path.abspath('main/credentials.json')
+        self.token = token
         self.service = self.get_service()
 
     # Refer to https://developers.google.com/sheets/api/quickstart/python#configure_the_sample
     def get_service(self):
         creds = None
         try:
-            if os.path.exists(self.token_file_path):
-                creds = Credentials.from_authorized_user_file(self.token_file_path, self.scopes)
+            if self.token is not None:
+                creds = Credentials.from_authorized_user_info(self.token, self.scopes)
             if not creds or not creds.valid:
                 if creds and creds.expired and creds.refresh_token:
                     creds.refresh(Request())
                 else:
-                    flow = InstalledAppFlow.from_client_secrets_file(self.credentials_file_path, self.scopes)
+                    flow = InstalledAppFlow.from_client_config(CREDS, self.scopes)
                     creds = flow.run_local_server(port=0)
-                # Save the credentials for the next run
-                with open(self.token_file_path, 'w') as token:
-                    token.write(creds.to_json())
+                    token = json.loads(creds.to_json())['refresh_token']
+                    print('Save your "refresh_token" to run without login next time:\n' + token + "\n")
             return build('sheets', 'v4', credentials=creds)
         except HttpError as err:
             print(err)
@@ -213,7 +225,7 @@ class SpreadsheetActions:
             }
         }
         self.requests = []
-        self.util = SpreadsheetUtil()
+        self.util = SpreadsheetUtil(self.config.token)
 
     # This request should be executed first because we get sheet ID from it
     def create_sheet(self):

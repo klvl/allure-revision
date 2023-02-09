@@ -2,14 +2,84 @@ import json
 
 AVAILABLE_REPORT_VALUES = ['fullName', 'message', 'category', 'status']
 AVAILABLE_COLORS = ['light_red', 'dark_red', 'yellow', 'green']
+TOKEN = {
+    "token_uri": "https://oauth2.googleapis.com/token",
+    "client_id": "555723526226-n96l2mat5jo50bo26hef7g7lt2hrtsd7.apps.googleusercontent.com",
+    "client_secret": "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",
+    "scopes": ["https://www.googleapis.com/auth/spreadsheets"]
+}
+DEFAULT_CONFIG = {
+    "statuses": ["failed", "broken"],
+    "columns": [
+        {
+            "name": "TEST",
+            "size": 700,
+            "reportValue": "fullName",
+            "index": 0
+        },
+        {
+            "name": "MESSAGE",
+            "size": 250,
+            "reportValue": "message",
+            "index": 1
+        },
+        {
+            "name": "CATEGORY",
+            "size": 200,
+            "reportValue": "category",
+            "index": 2
+        },
+        {
+            "name": "STATUS",
+            "size": 80,
+            "reportValue": "status",
+            "index": 3,
+            "conditionalFormatting": [
+                {
+                    "color": "light_red",
+                    "ifValue": "failed"
+                },
+                {
+                    "color": "yellow",
+                    "ifValue": "broken"
+                }
+            ]
+        },
+        {
+            "name": "REVISION",
+            "size": 80,
+            "index": 4,
+            "conditionalFormatting": [
+                {
+                    "color": "green",
+                    "ifValue": "fixed"
+                },
+                {
+                    "color": "green",
+                    "ifValue": "passed"
+                },
+                {
+                    "color": "dark_red",
+                    "ifValue": "bug"
+                }
+            ]
+        },
+        {
+            "name": "COMMENTS",
+            "size": 300,
+            "index": 5
+        }
+    ]
+}
 
 
 class ConfigParser:
-    def __init__(self, config_path, spreadsheet_id_from_args):
+    def __init__(self, config_path, spreadsheet_id_from_args, token_from_args):
         self.config = self.init_config(config_path)
         self.spreadsheet_id = self.init_spreadsheet_id(spreadsheet_id_from_args)
         self.statuses = self.init_statuses()
         self.columns = self.init_columns()
+        self.token = self.init_token(token_from_args)
 
     @staticmethod
     def init_config(config_path):
@@ -164,67 +234,14 @@ class ConfigParser:
 
         return final_columns
 
+    def init_token(self, token_from_args):
+        if token_from_args is not None:
+            TOKEN['refresh_token'] = token_from_args
+            return TOKEN
+        else:
+            try:
+                TOKEN['refresh_token'] = self.config['spreadsheet']['refresh_token']
+                return TOKEN
+            except KeyError:
+                return None
 
-DEFAULT_CONFIG = {
-    "statuses": ["failed", "broken"],
-    "columns": [
-        {
-            "name": "TEST",
-            "size": 700,
-            "reportValue": "fullName",
-            "index": 0
-        },
-        {
-            "name": "MESSAGE",
-            "size": 250,
-            "reportValue": "message",
-            "index": 1
-        },
-        {
-            "name": "CATEGORY",
-            "size": 200,
-            "reportValue": "category",
-            "index": 2
-        },
-        {
-            "name": "STATUS",
-            "size": 80,
-            "reportValue": "status",
-            "index": 3,
-            "conditionalFormatting": [
-                {
-                    "color": "light_red",
-                    "ifValue": "failed"
-                },
-                {
-                    "color": "yellow",
-                    "ifValue": "broken"
-                }
-            ]
-        },
-        {
-            "name": "REVISION",
-            "size": 80,
-            "index": 4,
-            "conditionalFormatting": [
-                {
-                    "color": "green",
-                    "ifValue": "fixed"
-                },
-                {
-                    "color": "green",
-                    "ifValue": "passed"
-                },
-                {
-                    "color": "dark_red",
-                    "ifValue": "bug"
-                }
-            ]
-        },
-        {
-            "name": "COMMENTS",
-            "size": 300,
-            "index": 5
-        }
-    ]
-}

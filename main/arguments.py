@@ -12,18 +12,21 @@ class ArgumentsParser:
         self.sheet_name = self.get_sheet_name()
         self.test_cases_path = self.get_test_cases_dir()
         self.config_path = self.get_config_path()
+        self.token = self.get_token()
 
     @staticmethod
     def get_args():
         parser = argparse.ArgumentParser()
+        parser.add_argument('--id', help='spreadsheet ID. If not specified, will be taken from config.json. If it is '
+                                         'passed as argument and exists in config — the value from argument will be '
+                                         'used!')
         parser.add_argument('--sheet', help='specify sheet name. Current date and time is taken if not specified')
         parser.add_argument('--report', help='path to allure-report. If not specified, the directory where script is '
                                              'running from, will be taken')
         parser.add_argument('--config', help='path to config.json. If not specified, the directory where script is '
                                              'running from, will be taken')
-        parser.add_argument('--id', help='spreadsheet ID. If not specified, will be taken from config.json. If it is '
-                                         'passed as argument and exists in config — the value from argument will be '
-                                         'used!')
+        parser.add_argument('--token', help='refresh token to use app without Google login. Run app the first time and '
+                                            'get refresh_token in the output. Can be passed in config.json')
         return parser.parse_args()
 
     @staticmethod
@@ -65,5 +68,11 @@ class ArgumentsParser:
 
         if os.path.exists(path):  # check if path exists
             return pathlib.Path(path)
+        else:
+            return None
+
+    def get_token(self):
+        if self.args.token:
+            return self.args.token
         else:
             return None

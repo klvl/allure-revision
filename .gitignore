@@ -4,9 +4,5 @@
 # Python
 __pycache__/
 
-# Credentials
-**/credentials.json
-**/token.json
-
 # Allure report
 allure-report
