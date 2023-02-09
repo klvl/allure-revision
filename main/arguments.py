@@ -63,4 +63,7 @@ class ArgumentsParser:
         else:
             path = 'config.json'
 
-        return self.get_path(path)
+        if os.path.exists(path):  # check if path exists
+            return pathlib.Path(path)
+        else:
+            return None

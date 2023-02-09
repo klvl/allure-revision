@@ -7,15 +7,17 @@ AVAILABLE_COLORS = ['light_red', 'dark_red', 'yellow', 'green']
 class ConfigParser:
     def __init__(self, config_path, spreadsheet_id_from_args):
         self.config = self.init_config(config_path)
-        self.spreadsheet = self.init_spreadsheet()
         self.spreadsheet_id = self.init_spreadsheet_id(spreadsheet_id_from_args)
         self.statuses = self.init_statuses()
         self.columns = self.init_columns()
 
     @staticmethod
     def init_config(config_path):
-        file = open(config_path)
-        return json.load(file)
+        if config_path is not None:
+            file = open(config_path)
+            return json.load(file)
+        else:
+            return DEFAULT_CONFIG
 
     def init_spreadsheet(self):
         try:
@@ -29,7 +31,7 @@ class ConfigParser:
             return spreadsheet_id_from_args
 
         try:
-            return self.spreadsheet['id']
+            return self.config['spreadsheet']['id']
         except KeyError:
             print('The "spreadsheet.id" should be passed as --id argument or be specified in config.json!')
             exit()
@@ -161,3 +163,68 @@ class ConfigParser:
                     final_columns.append(column)
 
         return final_columns
+
+
+DEFAULT_CONFIG = {
+    "statuses": ["failed", "broken"],
+    "columns": [
+        {
+            "name": "TEST",
+            "size": 700,
+            "reportValue": "fullName",
+            "index": 0
+        },
+        {
+            "name": "MESSAGE",
+            "size": 250,
+            "reportValue": "message",
+            "index": 1
+        },
+        {
+            "name": "CATEGORY",
+            "size": 200,
+            "reportValue": "category",
+            "index": 2
+        },
+        {
+            "name": "STATUS",
+            "size": 80,
+            "reportValue": "status",
+            "index": 3,
+            "conditionalFormatting": [
+                {
+                    "color": "light_red",
+                    "ifValue": "failed"
+                },
+                {
+                    "color": "yellow",
+                    "ifValue": "broken"
+                }
+            ]
+        },
+        {
+            "name": "REVISION",
+            "size": 80,
+            "index": 4,
+            "conditionalFormatting": [
+                {
+                    "color": "green",
+                    "ifValue": "fixed"
+                },
+                {
+                    "color": "green",
+                    "ifValue": "passed"
+                },
+                {
+                    "color": "dark_red",
+                    "ifValue": "bug"
+                }
+            ]
+        },
+        {
+            "name": "COMMENTS",
+            "size": 300,
+            "index": 5
+        }
+    ]
+}
