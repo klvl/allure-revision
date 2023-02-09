@@ -1,5 +1,7 @@
 import json
 
+AVAILABLE_REPORT_VALUES = ['fullName', 'message', 'category', 'status', False]
+
 
 class ConfigParser:
     def __init__(self, config_path):
@@ -104,6 +106,13 @@ class ConfigParser:
                 column['reportValue']
             except KeyError:
                 column['reportValue'] = False
+
+        # Check if reportValue is valid in all columns
+        for column in columns:
+            if column['reportValue'] not in AVAILABLE_REPORT_VALUES:
+                print('The reportValue "' + column['reportValue'] + '" is not valid in config.json!\nPermitted values: '
+                      + str(AVAILABLE_REPORT_VALUES))
+                exit()
 
         # Sort columns
         final_columns = []
