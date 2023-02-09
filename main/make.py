@@ -1,16 +1,15 @@
 from __future__ import print_function
 
-from arguments_parser import ArgumentsParser
-from report_parser import ReportParser
+from arguments import ArgumentsParser
+from report import ReportParser
 from spreadsheet import SpreadsheetActions
-
-# The ID of a spreadsheet
-SPREADSHEET_ID = '1EKAU39h3YQCr0kQZCF5DnxuWPxgJ9IoOaumRkbHtCf8'
+from config import ConfigParser
 
 
 def main():
     # Parse arguments
     args = ArgumentsParser()
+    config = ConfigParser(args.config_path)
 
     # Parse failed tests
     report = ReportParser(args.test_cases_path)
@@ -21,7 +20,7 @@ def main():
     columns_length = len(report.header)
 
     # Initialize service, create new sheet, upload rows
-    spreadsheet = SpreadsheetActions(SPREADSHEET_ID, args.sheet_name)
+    spreadsheet = SpreadsheetActions(config.spreadsheet_id, args.sheet_name)
     spreadsheet.create_sheet()
     spreadsheet.upload_rows(rows)
 
