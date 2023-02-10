@@ -191,6 +191,31 @@ class SpreadsheetUtil:
             }
         }
 
+    @staticmethod
+    def get_repeat_cell_request(sheet_id, start_row_index, end_row_index, background_color, foreground_color,
+                                font_size):
+        return {
+            'repeatCell': {
+                'range': {
+                    'sheetId': sheet_id,
+                    'startRowIndex': start_row_index,
+                    'endRowIndex': end_row_index
+                },
+                'cell': {
+                    'userEnteredFormat': {
+                        'backgroundColor': background_color,
+                        'horizontalAlignment': 'CENTER',
+                        'textFormat': {
+                            'foregroundColor': foreground_color,
+                            'fontSize': font_size,
+                            'bold': json.dumps(True)
+                        }
+                    }
+                },
+                'fields': 'userEnteredFormat(backgroundColor,textFormat,horizontalAlignment)'
+            }
+        }
+
 
 class SpreadsheetActions:
     def __init__(self, config, sheet_name, rows):
@@ -235,6 +260,16 @@ class SpreadsheetActions:
 
     def collect_freeze_rows_request(self):
         request = self.util.get_freeze_rows_rq(self.sheet_id, 1)
+        self.requests.append(request)
+
+    def collect_header_formatting_request(self):
+        request = self.util.get_repeat_cell_request(
+            sheet_id=self.sheet_id,
+            start_row_index=0,
+            end_row_index=1,
+            background_color=self.config.colors[self.config.header['backgroundColor']],
+            foreground_color=self.config.colors[self.config.header['foregroundColor']],
+            font_size=self.config.header['fontSize'])
         self.requests.append(request)
 
     def collect_conditional_formatting_to_all_rows(self):

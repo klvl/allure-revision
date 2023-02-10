@@ -39,11 +39,26 @@ COLORS = {  # rgb scheme, where r = r/255, g = g/255, b = b/255
         'red': 0.850980392156863,
         'green': 0.917647058823529,
         'blue': 0.827450980392157
+    },
+    'blue': {
+        'red': 0.235294117647059,
+        'green': 0.470588235294118,
+        'blue': 0.847058823529412
+    },
+    'white': {
+        'red': 1,
+        'green': 1,
+        'blue': 1
     }
 }
 DEFAULT_CONFIG = {
     "newSheetIndex": 0,
     "statuses": ["failed", "broken"],
+    "headerFormatting": {
+        "backgroundColor": "blue",
+        "foregroundColor": "white",
+        "fontSize": 11
+    },
     "columns": [
         {
             "name": "TEST",

@@ -9,6 +9,7 @@ class ConfigParser:
         self.spreadsheet_id = self.init_spreadsheet_id(spreadsheet_id_from_args)
         self.statuses = self.init_statuses()
         self.colors = COLORS
+        self.header = self.init_header_formatting()
         self.column_names = COLUMN_NAMES
         self.columns = self.init_columns()
         self.new_sheet_index = self.init_new_sheet_index()
@@ -67,6 +68,9 @@ class ConfigParser:
                 exit()
 
         return statuses
+
+    def init_header_formatting(self):
+        return self.config['headerFormatting']
 
     def init_columns(self):
         columns = None
