@@ -283,7 +283,7 @@ class SpreadsheetActions:
         self.util.upload_rows(self.sheet_name, 'A:Z', spreadsheet_id=self.config.spreadsheet_id, rows=self.rows)
 
     def collect_move_sheet_to_index_request(self):
-        if self.config.new_sheet_index:
+        if self.config.new_sheet_index is not None:
             request = self.util.get_update_sheet_index_request(self.sheet_id, self.config.new_sheet_index,
                                                                self.sheet_name)
             self.requests.append(request)

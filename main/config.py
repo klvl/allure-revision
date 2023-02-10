@@ -1,6 +1,7 @@
 import json
 
 from vars import *
+from default_config import *
 
 
 class ConfigParser:
@@ -84,7 +85,7 @@ class ConfigParser:
         try:
             return self.config['newSheetIndex']
         except KeyError:
-            return False
+            return None
 
     def init_statuses(self):
         statuses = None
