@@ -173,6 +173,16 @@ class ConfigParser:
             except KeyError:
                 column['conditionalFormatting'] = False  # Set empty conditional formatting
 
+        # Validate indexes sequence
+        actual_indexes = [column['index'] for column in columns]
+        actual_indexes.sort()
+        expected_indexes = [index for index in range(len(columns))]
+        if actual_indexes != expected_indexes:
+            print('Invalid columns indexes sequence!\n\n' +
+                  'Actual sequence: ' + str(actual_indexes) + '\n' +
+                  'Expected sequence: ' + str(expected_indexes))
+            exit()
+
         # Sort columns by index
         final_columns = []
         for i in range(len(columns)):
