@@ -1,119 +1,169 @@
 CREDS = {
-    "installed": {
-        "client_id": "555723526226-n96l2mat5jo50bo26hef7g7lt2hrtsd7.apps.googleusercontent.com",
-        "project_id": "allure-revisioin",
-        "auth_uri": "https://accounts.google.com/o/oauth2/auth",
-        "token_uri": "https://oauth2.googleapis.com/token",
-        "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
-        "client_secret": "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",
-        "redirect_uris": [
-            "http://localhost"
+    'installed': {
+        'client_id': '555723526226-n96l2mat5jo50bo26hef7g7lt2hrtsd7.apps.googleusercontent.com',
+        'project_id': 'allure-revisioin',
+        'auth_uri': 'https://accounts.google.com/o/oauth2/auth',
+        'token_uri': 'https://oauth2.googleapis.com/token',
+        'auth_provider_x509_cert_url': 'https://www.googleapis.com/oauth2/v1/certs',
+        'client_secret': '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',
+        'redirect_uris': [
+            'http://localhost'
         ]
     }
 }
 TOKEN = {
-    "token_uri": "https://oauth2.googleapis.com/token",
-    "client_id": "555723526226-n96l2mat5jo50bo26hef7g7lt2hrtsd7.apps.googleusercontent.com",
-    "client_secret": "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",
-    "scopes": ["https://www.googleapis.com/auth/spreadsheets"]
+    'token_uri': 'https://oauth2.googleapis.com/token',
+    'client_id': '555723526226-n96l2mat5jo50bo26hef7g7lt2hrtsd7.apps.googleusercontent.com',
+    'client_secret': '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',
+    'scopes': ['https://www.googleapis.com/auth/spreadsheets']
 }
 AVAILABLE_REPORT_VALUES = ['fullName', 'message', 'category', 'status']
 AVAILABLE_HORIZONTAL_ALIGNMENTS = ['LEFT', 'CENTER', 'RIGHT', 'JUSTIFYLEFT']
 COLUMN_NAMES = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'G', 'K', 'L', 'M', 'N', 'O']
-COLORS = {  # rgb scheme, where r = r/255, g = g/255, b = b/255
-    "light_red": {
-        'red': 0.956862745098039,
-        'green': 0.8,
-        'blue': 0.8
+COLORS = {  # https://kierandixon.com/google-sheets-colors/
+    'white': {  # white
+        'red': 1,  # 255/255
+        'green': 1,  # 255/255
+        'blue': 1  # 255/255
     },
-    'dark_red': {
-        'red': 0.8,
-        'green': 0,
-        'blue': 0
+    'black': {  # black
+        'red': 0,  # 0/255
+        'green': 0,  # 0/255
+        'blue': 0  # 0/255
     },
-    'yellow': {
-        'red': 1,
-        'green': 0.949019607843137,
-        'blue': 0.8
+    'grey': {  # grey
+        0.8,  # 204/255
+        0.8,  # 204/255
+        0.8  # 204/255
     },
-    'green': {
-        'red': 0.850980392156863,
-        'green': 0.917647058823529,
-        'blue': 0.827450980392157
+    'light_grey': {  # light grey 3
+        'red': 0.952941176470588,  # 243/255
+        'green': 0.952941176470588,  # 243/255
+        'blue': 0.952941176470588  # 243/255
     },
-    'blue': {
-        'red': 0.235294117647059,
-        'green': 0.470588235294118,
-        'blue': 0.847058823529412
+    'red': {  # light red 1
+        'red': 0.87843137254902,  # 224/255
+        'green': 0.4,  # 102/255
+        'blue': 0.4  # 102/255
     },
-    'white': {
-        'red': 1,
-        'green': 1,
-        'blue': 1
+    'light_red': {  # light red 3
+        'red': 0.956862745098039,  # 244/255
+        'green': 0.8,  # 204/255
+        'blue': 0.8  # 204/255
+    },
+    'orange': {  # dark orange 1
+        'red': 0.901960784313725,  # 230/255
+        'green': 0.568627450980392,  # 145/255
+        'blue': 0.219607843137255  # 56/255
+    },
+    'light_orange': {  # light orange 2
+        'red': 0.976470588235294,  # 249/255
+        'green': 0.796078431372549,  # 203/255
+        'blue': 0.611764705882353  # 156/255
+    },
+    'yellow': {  # light yellow 1
+        'red': 1,  # 255/255
+        'green': 0.850980392156863,  # 217/255
+        'blue': 0.4  # 102/255
+    },
+    'light_yellow': {  # light yellow 3
+        'red': 1,  # 255/255
+        'green': 0.949019607843137,  # 242/255
+        'blue': 0.8  # 204/255
+    },
+    'green': {  # light green 1
+        'red': 0.576470588235294,  # 147/255
+        'green': 0.768627450980392,  # 196/255
+        'blue': 0.490196078431373  # 125/255
+    },
+    'light_green': {  # light green 3
+        'red': 0.850980392156863,  # 217/255
+        'green': 0.917647058823529,  # 234/255
+        'blue': 0.827450980392157  # 211/255
+    },
+    'blue': {  # dark cornflower blue 1
+        'red': 0.235294117647059,  # 60/255
+        'green': 0.470588235294118,  # 120/255
+        'blue': 0.847058823529412  # 216/255
+    },
+    'light_blue': {  # light cornflower blue 3
+        'red': 0.788235294117647,  # 201/255
+        'green': 0.854901960784314,  # 218/255
+        'blue': 0.972549019607843  # 248/255
+    },
+    'purple': {  # dark purple 1
+        'red': 0.403921568627451,  # 103/255
+        'green': 0.305882352941176,  # 78/255
+        'blue': 0.654901960784314  # 167/255
+    },
+    'light_purple': {  # light purple 2
+        'red': 0.705882352941176,  # 180/255
+        'green': 0.654901960784314,  # 167/255
+        'blue': 0.83921568627451  # 214/255
     }
 }
 DEFAULT_CONFIG = {
-    "newSheetIndex": 0,
-    "statuses": ["failed", "broken"],
-    "headerFormatting": {
-        "backgroundColor": "blue",
-        "foregroundColor": "white",
-        "fontSize": 11
+    'newSheetIndex': 0,
+    'statuses': ['failed', 'broken'],
+    'headerFormatting': {
+        'backgroundColor': 'blue',
+        'foregroundColor': 'white',
+        'fontSize': 11
     },
-    "columns": [
+    'columns': [
         {
-            "name": "TEST",
-            "size": 700,
-            "reportValue": "fullName",
-            "index": 0
+            'name': 'TEST',
+            'size': 700,
+            'reportValue': 'fullName',
+            'index': 0
         },
         {
-            "name": "MESSAGE",
-            "size": 250,
-            "reportValue": "message",
-            "index": 1
+            'name': 'MESSAGE',
+            'size': 250,
+            'reportValue': 'message',
+            'index': 1
         },
         {
-            "name": "STATUS",
-            "size": 100,
-            "reportValue": "status",
-            "index": 2,
-            "horizontalAlignment": 'CENTER',
-            "conditionalFormatting": [
+            'name': 'STATUS',
+            'size': 100,
+            'reportValue': 'status',
+            'index': 2,
+            'horizontalAlignment': 'CENTER',
+            'conditionalFormatting': [
                 {
-                    "color": "light_red",
-                    "ifValue": "failed"
+                    'color': 'light_red',
+                    'ifValue': 'failed'
                 },
                 {
-                    "color": "yellow",
-                    "ifValue": "broken"
+                    'color': 'light_yellow',
+                    'ifValue': 'broken'
                 }
             ]
         },
         {
-            "name": "REVISION",
-            "size": 100,
-            "index": 3,
-            "horizontalAlignment": 'CENTER',
-            "conditionalFormatting": [
+            'name': 'REVISION',
+            'size': 100,
+            'index': 3,
+            'horizontalAlignment': 'CENTER',
+            'conditionalFormatting': [
                 {
-                    "color": "green",
-                    "ifValue": "fixed"
+                    'color': 'light_green',
+                    'ifValue': 'fixed'
                 },
                 {
-                    "color": "green",
-                    "ifValue": "passed"
+                    'color': 'light_green',
+                    'ifValue': 'passed'
                 },
                 {
-                    "color": "dark_red",
-                    "ifValue": "bug"
+                    'color': 'red',
+                    'ifValue': 'bug'
                 }
             ]
         },
         {
-            "name": "COMMENTS",
-            "size": 500,
-            "index": 4
+            'name': 'COMMENTS',
+            'size': 500,
+            'index': 4
         }
     ]
 }
