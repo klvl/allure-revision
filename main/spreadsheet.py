@@ -7,27 +7,11 @@ from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 
 
-COLUMN_NAMES = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'G', 'K', 'L', 'M', 'N', 'O']
-
-CREDS = {
-    "installed": {
-        "client_id": "555723526226-n96l2mat5jo50bo26hef7g7lt2hrtsd7.apps.googleusercontent.com",
-        "project_id": "allure-revisioin",
-        "auth_uri": "https://accounts.google.com/o/oauth2/auth",
-        "token_uri": "https://oauth2.googleapis.com/token",
-        "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
-        "client_secret": "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",
-        "redirect_uris": [
-            "http://localhost"
-        ]
-    }
-}
-
-
 class SpreadsheetUtil:
-    def __init__(self, token):
-        # If modifying these scopes, delete the file token.json
+    def __init__(self, creds, token):
+        # If modifying these scopes, the refresh_token should be removed
         self.scopes = ['https://www.googleapis.com/auth/spreadsheets']
+        self.pre_defined_creds = creds
         self.token = token
         self.service = self.get_service()
 
@@ -41,7 +25,7 @@ class SpreadsheetUtil:
                 if creds and creds.expired and creds.refresh_token:
                     creds.refresh(Request())
                 else:
-                    flow = InstalledAppFlow.from_client_config(CREDS, self.scopes)
+                    flow = InstalledAppFlow.from_client_config(self.pre_defined_creds, self.scopes)
                     creds = flow.run_local_server(port=0)
                     token = json.loads(creds.to_json())['refresh_token']
                     print('Save your "refresh_token" to run without login next time:\n' + token + "\n")
@@ -201,31 +185,9 @@ class SpreadsheetActions:
         self.sheet_name = sheet_name
         self.rows = rows
         self.sheet_id = None
-        # rgb scheme, where r = r/255, g = g/255, b = b/255
-        self.COLORS = {
-            "light_red": {
-                'red': 0.956862745098039,
-                'green': 0.8,
-                'blue': 0.8
-            },
-            'dark_red': {
-                'red': 0.8,
-                'green': 0,
-                'blue': 0
-            },
-            'yellow': {
-                'red': 1,
-                'green': 0.949019607843137,
-                'blue': 0.8
-            },
-            'green': {
-                'red': 0.850980392156863,
-                'green': 0.917647058823529,
-                'blue': 0.827450980392157
-            }
-        }
+        self.colors = self.config.colors
         self.requests = []
-        self.util = SpreadsheetUtil(self.config.token)
+        self.util = SpreadsheetUtil(self.config.creds, self.config.token)
 
     # This request should be executed first because we get sheet ID from it
     def create_sheet(self):
@@ -263,7 +225,7 @@ class SpreadsheetActions:
             if column['conditionalFormatting']:
                 for formatting_rule in column['conditionalFormatting']:
                     formula = self.get_conditional_formatting_formula(column, formatting_rule)
-                    color = self.COLORS[formatting_rule['color']]
+                    color = self.colors[formatting_rule['color']]
                     for column_index in range(len(self.config.columns)):
                         request = self.util.get_conditional_formatting_rq(
                             sheet_id=self.sheet_id,
@@ -275,9 +237,8 @@ class SpreadsheetActions:
                             color=color)
                         self.requests.append(request)
 
-    @staticmethod
-    def get_conditional_formatting_formula(column, formatting_rule):
-        cell_ref = COLUMN_NAMES[column['index']] + '2'
+    def get_conditional_formatting_formula(self, column, formatting_rule):
+        cell_ref = self.config.column_names[column['index']] + '2'
         return '=EQ(' + cell_ref + '; "' + formatting_rule['ifValue'] + '")'
 
     def execute_requests(self):

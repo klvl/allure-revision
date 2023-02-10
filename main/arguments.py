@@ -7,7 +7,6 @@ from datetime import datetime
 class ArgumentsParser:
     def __init__(self):
         self.args = self.get_args()
-
         self.spreadsheet_id = self.get_spreadsheet_id()
         self.sheet_name = self.get_sheet_name()
         self.test_cases_path = self.get_test_cases_dir()

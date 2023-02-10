@@ -1,76 +1,6 @@
 import json
 
-AVAILABLE_REPORT_VALUES = ['fullName', 'message', 'category', 'status']
-AVAILABLE_COLORS = ['light_red', 'dark_red', 'yellow', 'green']
-TOKEN = {
-    "token_uri": "https://oauth2.googleapis.com/token",
-    "client_id": "555723526226-n96l2mat5jo50bo26hef7g7lt2hrtsd7.apps.googleusercontent.com",
-    "client_secret": "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",
-    "scopes": ["https://www.googleapis.com/auth/spreadsheets"]
-}
-DEFAULT_CONFIG = {
-    "statuses": ["failed", "broken"],
-    "columns": [
-        {
-            "name": "TEST",
-            "size": 700,
-            "reportValue": "fullName",
-            "index": 0
-        },
-        {
-            "name": "MESSAGE",
-            "size": 250,
-            "reportValue": "message",
-            "index": 1
-        },
-        {
-            "name": "CATEGORY",
-            "size": 200,
-            "reportValue": "category",
-            "index": 2
-        },
-        {
-            "name": "STATUS",
-            "size": 80,
-            "reportValue": "status",
-            "index": 3,
-            "conditionalFormatting": [
-                {
-                    "color": "light_red",
-                    "ifValue": "failed"
-                },
-                {
-                    "color": "yellow",
-                    "ifValue": "broken"
-                }
-            ]
-        },
-        {
-            "name": "REVISION",
-            "size": 80,
-            "index": 4,
-            "conditionalFormatting": [
-                {
-                    "color": "green",
-                    "ifValue": "fixed"
-                },
-                {
-                    "color": "green",
-                    "ifValue": "passed"
-                },
-                {
-                    "color": "dark_red",
-                    "ifValue": "bug"
-                }
-            ]
-        },
-        {
-            "name": "COMMENTS",
-            "size": 300,
-            "index": 5
-        }
-    ]
-}
+from vars import *
 
 
 class ConfigParser:
@@ -78,7 +8,10 @@ class ConfigParser:
         self.config = self.init_config(config_path)
         self.spreadsheet_id = self.init_spreadsheet_id(spreadsheet_id_from_args)
         self.statuses = self.init_statuses()
+        self.colors = COLORS
+        self.column_names = COLUMN_NAMES
         self.columns = self.init_columns()
+        self.creds = CREDS
         self.token = self.init_token(token_from_args)
 
     @staticmethod
@@ -111,7 +44,7 @@ class ConfigParser:
         try:
             statuses = self.config['statuses']
         except KeyError:
-            print('There is no "statuses" parameter in confi.json!')
+            print('There is no "statuses" parameter in config.json!')
             exit()
 
         # Validate all statuses are expected
@@ -127,7 +60,7 @@ class ConfigParser:
             status_duplication = 0
             for s in statuses:
                 if s == status:
-                    status_duplication +=1
+                    status_duplication += 1
             if status_duplication > 1:
                 print('The status "' + status + '" is duplicated!')
                 exit()
@@ -149,8 +82,8 @@ class ConfigParser:
             print('The "columns" array cannot be empty!')
             exit()
 
-        # Validate columns do not exceed maximum allowed amount. See COLUMN_NAMES amount array in spreadsheet.py
-        if len(columns) > 15:
+        # Validate columns do not exceed maximum allowed amount
+        if len(columns) > len(self.column_names):
             print('The maximum supported columns amount is 15! '
                   'Try less amount of columns or wait for the next release!')
             exit()
@@ -186,8 +119,8 @@ class ConfigParser:
         for column in columns:
             try:
                 if column['reportValue'] not in AVAILABLE_REPORT_VALUES:
-                    print('The reportValue "' + column['reportValue'] + '" is not valid in config.json!\n'
-                                                                        'Permitted values: ' + str(AVAILABLE_REPORT_VALUES))
+                    print('The reportValue "' + column['reportValue'] + '" is not valid in config.json!\n' +
+                          'Permitted values: ' + str(AVAILABLE_REPORT_VALUES))
                     exit()
             except KeyError:
                 continue
@@ -212,9 +145,9 @@ class ConfigParser:
                 rules = column['conditionalFormatting']
                 for rule in rules:
                     try:
-                        if rule['color'] not in AVAILABLE_COLORS:
-                            print('The color "' + rule['color'] + '" is not available yet! '
-                                                                  'Try one of the following:\n' + str(AVAILABLE_COLORS))
+                        if rule['color'] not in self.colors.keys():
+                            print('The color "' + rule['color'] + '" is not available yet! ' +
+                                  'Try one of the following:\n' + str(self.colors.keys()))
                     except KeyError:
                         print('There is no color attribute in config.json! Affected column:\n' + column)
                         exit()
