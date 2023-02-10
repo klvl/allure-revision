@@ -51,10 +51,9 @@ class ConfigParser:
 
         # Validate all statuses are expected
         for status in statuses:
-            if status != 'failed' and status != 'passed' and status != 'skipped' and status != 'broken' and \
-                    status != 'unknown':
-                print('The status "' + status + '" is not expected! '
-                                                'Should be one of the following: failed, passed, skipped, broken')
+            if status not in AVAILABLE_REPORT_STATUSES:
+                print('The status "' + status + '" is not expected! ' +
+                      'Should be one of the following: ' + str(AVAILABLE_REPORT_STATUSES))
                 exit()
 
         # Validate statuses are unique
