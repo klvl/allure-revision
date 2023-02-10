@@ -104,13 +104,15 @@ COLORS = {  # https://kierandixon.com/google-sheets-colors/
     }
 }
 DEFAULT_CONFIG = {
-    'newSheetIndex': 0,
-    'statuses': ['failed', 'broken'],
+    # 'id': '<your-spreadsheet-id>',
+    # 'token': '<your-refresh-token>',
     'headerFormatting': {
         'backgroundColor': 'blue',
         'foregroundColor': 'white',
         'fontSize': 11
     },
+    'newSheetIndex': 0,
+    'statuses': ['failed', 'broken'],
     'columns': [
         {
             'name': 'TEST',

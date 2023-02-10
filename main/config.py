@@ -7,14 +7,14 @@ class ConfigParser:
     def __init__(self, config_path, spreadsheet_id_from_args, token_from_args):
         self.config = self.init_config(config_path)
         self.spreadsheet_id = self.init_spreadsheet_id(spreadsheet_id_from_args)
-        self.statuses = self.init_statuses()
-        self.colors = COLORS
-        self.header = self.init_header_formatting()
-        self.column_names = COLUMN_NAMES
-        self.columns = self.init_columns()
-        self.new_sheet_index = self.init_new_sheet_index()
-        self.creds = CREDS
         self.token = self.init_token(token_from_args)
+        self.creds = CREDS
+        self.colors = COLORS
+        self.column_names = COLUMN_NAMES
+        self.header = self.init_header_formatting()
+        self.new_sheet_index = self.init_new_sheet_index()
+        self.statuses = self.init_statuses()
+        self.columns = self.init_columns()
 
     @staticmethod
     def init_config(config_path):
@@ -24,13 +24,6 @@ class ConfigParser:
         else:
             return DEFAULT_CONFIG
 
-    def init_spreadsheet(self):
-        try:
-            return self.config['spreadsheet']
-        except KeyError:
-            print('There is no "spreadsheet" parameter in config.json!')
-            exit()
-
     def init_spreadsheet_id(self, spreadsheet_id_from_args):
         if spreadsheet_id_from_args:
             return spreadsheet_id_from_args
@@ -38,8 +31,60 @@ class ConfigParser:
         try:
             return self.config['spreadsheet']['id']
         except KeyError:
-            print('The "spreadsheet.id" should be passed as --id argument or be specified in config.json!')
+            print('The "id" (spreadsheet ID) should be passed as --id argument or be specified in config.json!')
             exit()
+
+    def init_token(self, token_from_args):
+        if token_from_args is not None:
+            TOKEN['refresh_token'] = token_from_args
+            return TOKEN
+        else:
+            try:
+                TOKEN['refresh_token'] = self.config['spreadsheet']['refresh_token']
+                return TOKEN
+            except KeyError:
+                return None
+
+    def init_header_formatting(self):
+        try:
+            formatting = self.config['headerFormatting']
+        except KeyError:
+            return False
+
+        # Validate background color
+        try:
+            if formatting['backgroundColor'] not in self.colors.keys():
+                print('The color "' + formatting['backgroundColor'] + '" is not available yet! ' +
+                      'Try one of the following:\n' + str(self.colors.keys()))
+                exit()
+        except KeyError:
+            print('The backgroundColor is not present in headerFormatting!')
+            exit()
+
+        # Validate foreground color
+        try:
+            if formatting['foregroundColor'] not in self.colors.keys():
+                print('The color "' + formatting['backgroundColor'] + '" is not available yet! ' +
+                      'Try one of the following:\n' + str(self.colors.keys()))
+                exit()
+        except KeyError:
+            print('The foregroundColor is not present in headerFormatting!')
+            exit()
+
+        # Validate font size
+        try:
+            formatting['fontSize']
+        except KeyError:
+            print('The fontSize is not present in headerFormatting!')
+            exit()
+
+        return formatting
+
+    def init_new_sheet_index(self):
+        try:
+            return self.config['newSheetIndex']
+        except KeyError:
+            return False
 
     def init_statuses(self):
         statuses = None
@@ -67,9 +112,6 @@ class ConfigParser:
                 exit()
 
         return statuses
-
-    def init_header_formatting(self):
-        return self.config['headerFormatting']
 
     def init_columns(self):
         columns = None
@@ -200,18 +242,4 @@ class ConfigParser:
                     final_columns.append(column)
 
         return final_columns
-
-    def init_new_sheet_index(self):
-        return self.config['newSheetIndex']
-
-    def init_token(self, token_from_args):
-        if token_from_args is not None:
-            TOKEN['refresh_token'] = token_from_args
-            return TOKEN
-        else:
-            try:
-                TOKEN['refresh_token'] = self.config['spreadsheet']['refresh_token']
-                return TOKEN
-            except KeyError:
-                return None
 

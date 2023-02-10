@@ -283,8 +283,10 @@ class SpreadsheetActions:
         self.util.upload_rows(self.sheet_name, 'A:Z', spreadsheet_id=self.config.spreadsheet_id, rows=self.rows)
 
     def collect_move_sheet_to_index_request(self):
-        request = self.util.get_update_sheet_index_request(self.sheet_id, self.config.new_sheet_index, self.sheet_name)
-        self.requests.append(request)
+        if self.config.new_sheet_index:
+            request = self.util.get_update_sheet_index_request(self.sheet_id, self.config.new_sheet_index,
+                                                               self.sheet_name)
+            self.requests.append(request)
 
     def collect_update_column_size_requests(self):
         for column in self.config.columns:
@@ -330,14 +332,15 @@ class SpreadsheetActions:
                 self.requests.append(request)
 
     def collect_header_formatting_request(self):
-        request = self.util.get_repeat_cell_request(
-            sheet_id=self.sheet_id,
-            start_row_index=0,
-            end_row_index=1,
-            background_color=self.config.colors[self.config.header['backgroundColor']],
-            foreground_color=self.config.colors[self.config.header['foregroundColor']],
-            font_size=self.config.header['fontSize'])
-        self.requests.append(request)
+        if self.config.header:
+            request = self.util.get_repeat_cell_request(
+                sheet_id=self.sheet_id,
+                start_row_index=0,
+                end_row_index=1,
+                background_color=self.config.colors[self.config.header['backgroundColor']],
+                foreground_color=self.config.colors[self.config.header['foregroundColor']],
+                font_size=self.config.header['fontSize'])
+            self.requests.append(request)
 
     def collect_conditional_formatting_to_all_rows(self):
         for column in self.config.columns:
