@@ -31,7 +31,8 @@ def main():
     spreadsheet.execute_requests()
 
     # Print successful result message
-    print('Uploaded on "' + args.sheet_name + '" sheet: ' + spreadsheet.get_link_to_sheet())
+    print('\nUploaded ' + str(report.found_tests_amount) + ' tests with ' + str(config.statuses) + ' status(-es) ' +
+          'on the "' + args.sheet_name + '" sheet:\n' + spreadsheet.get_link_to_sheet())
 
 
 if __name__ == '__main__':

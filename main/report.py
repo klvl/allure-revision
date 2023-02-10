@@ -7,6 +7,7 @@ class ReportParser:
         self.config = config
         self.retry_ref = []
         self.rows = []
+        self.found_tests_amount = 0
         self.get_rows()
 
     def get_rows(self):
@@ -33,12 +34,10 @@ class ReportParser:
                     self.rows.append(row)
 
         # Validate failed tests found
-        found_tests_amount = len(self.rows) - 1  # All rows without header line
-        if not found_tests_amount:
+        self.found_tests_amount = len(self.rows) - 1  # All rows without header line
+        if not self.found_tests_amount:
             print('No tests with ' + str(self.config.statuses) + ' status(-es) found!')
             exit()
-        print('There were ' + str(found_tests_amount) + ' tests with ' + str(self.config.statuses) +
-              ' status(-es) found!')
 
         return self.rows
 
