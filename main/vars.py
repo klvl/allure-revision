@@ -73,16 +73,10 @@ DEFAULT_CONFIG = {
             "index": 1
         },
         {
-            "name": "CATEGORY",
-            "size": 200,
-            "reportValue": "category",
-            "index": 2
-        },
-        {
             "name": "STATUS",
-            "size": 80,
+            "size": 100,
             "reportValue": "status",
-            "index": 3,
+            "index": 2,
             "conditionalFormatting": [
                 {
                     "color": "light_red",
@@ -96,8 +90,8 @@ DEFAULT_CONFIG = {
         },
         {
             "name": "REVISION",
-            "size": 80,
-            "index": 4,
+            "size": 100,
+            "index": 3,
             "conditionalFormatting": [
                 {
                     "color": "green",
@@ -115,8 +109,8 @@ DEFAULT_CONFIG = {
         },
         {
             "name": "COMMENTS",
-            "size": 300,
-            "index": 5
+            "size": 500,
+            "index": 4
         }
     ]
 }
