@@ -158,6 +158,7 @@ DEFAULT_CONFIG = {
             'size': 100,
             'index': 3,
             'horizontalAlignment': 'CENTER',
+            'dropdown': ['fixed', 'passed', 'issue'],
             'conditionalFormatting': [
                 {
                     'color': 'light_green',
@@ -166,10 +167,6 @@ DEFAULT_CONFIG = {
                 {
                     'color': 'light_green',
                     'ifValue': 'passed'
-                },
-                {
-                    'color': 'red',
-                    'ifValue': 'issue'
                 },
                 {
                     'color': 'red',

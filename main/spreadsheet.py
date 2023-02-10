@@ -237,6 +237,29 @@ class SpreadsheetUtil:
             }
         }
 
+    @staticmethod
+    def get_set_dropdown_request(sheet_id, start_row_index, end_row_index, start_column_index, end_column_index,
+                                 values):
+        return {
+            'setDataValidation': {
+                'range': {
+                    'sheetId': sheet_id,
+                    'startRowIndex': start_row_index,
+                    'endRowIndex': end_row_index,
+                    'startColumnIndex': start_column_index,
+                    'endColumnIndex': end_column_index
+                },
+                'rule': {
+                    'condition': {
+                        'type': 'ONE_OF_LIST',
+                        'values': values,
+                    },
+                    'showCustomUi': json.dumps(True),
+                    'strict': json.dumps(True)
+                }
+            }
+        }
+
 
 class SpreadsheetActions:
     def __init__(self, config, sheet_name, rows):
@@ -282,6 +305,18 @@ class SpreadsheetActions:
     def collect_freeze_rows_request(self):
         request = self.util.get_freeze_rows_rq(self.sheet_id, 1)
         self.requests.append(request)
+
+    def collect_set_dropdown_requests(self):
+        for column in self.config.columns:
+            if column['dropdown']:
+                request = self.util.get_set_dropdown_request(
+                    sheet_id=self.sheet_id,
+                    start_row_index=1,
+                    end_row_index=len(self.rows),
+                    start_column_index=column['index'],
+                    end_column_index=column['index']+1,
+                    values=column['dropdown'])
+                self.requests.append(request)
 
     def collect_horizontal_alignment_requests(self):
         for column in self.config.columns:

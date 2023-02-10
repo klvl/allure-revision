@@ -153,6 +153,16 @@ class ConfigParser:
             except KeyError:
                 column['horizontalAlignment'] = False
 
+        # Validate dropdown
+        for column in columns:
+            try:
+                final_dropdown = []
+                for item in column['dropdown']:
+                    final_dropdown.append({'userEnteredValue': item})
+                column['dropdown'] = final_dropdown
+            except KeyError:
+                column['dropdown'] = False
+
         # Validate conditional formatting
         for column in columns:
             try:
