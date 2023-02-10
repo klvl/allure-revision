@@ -27,6 +27,7 @@ def main():
     spreadsheet.collect_sort_request()
     spreadsheet.collect_freeze_rows_request()
     spreadsheet.collect_header_formatting_request()
+    spreadsheet.collect_horizontal_alignment_requests()
     spreadsheet.collect_conditional_formatting_to_all_rows()
 
     # Execute requests

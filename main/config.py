@@ -144,6 +144,16 @@ class ConfigParser:
             except KeyError:
                 column['size'] = False
 
+        # Validate horizontal alignments
+        for column in columns:
+            try:
+                if column['horizontalAlignment'] not in AVAILABLE_HORIZONTAL_ALIGNMENTS:
+                    print('Invalid "' + column['horizontalAlignment'] + '" + horizontalAlignment value!\n' +
+                          'Available values: ' + str(AVAILABLE_HORIZONTAL_ALIGNMENTS))
+                    exit()
+            except KeyError:
+                column['horizontalAlignment'] = False
+
         # Validate conditional formatting
         for column in columns:
             try:

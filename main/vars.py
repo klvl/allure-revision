@@ -18,6 +18,7 @@ TOKEN = {
     "scopes": ["https://www.googleapis.com/auth/spreadsheets"]
 }
 AVAILABLE_REPORT_VALUES = ['fullName', 'message', 'category', 'status']
+AVAILABLE_HORIZONTAL_ALIGNMENTS = ['LEFT', 'CENTER', 'RIGHT', 'JUSTIFYLEFT']
 COLUMN_NAMES = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'G', 'K', 'L', 'M', 'N', 'O']
 COLORS = {  # rgb scheme, where r = r/255, g = g/255, b = b/255
     "light_red": {
@@ -77,6 +78,7 @@ DEFAULT_CONFIG = {
             "size": 100,
             "reportValue": "status",
             "index": 2,
+            "horizontalAlignment": 'CENTER',
             "conditionalFormatting": [
                 {
                     "color": "light_red",
@@ -92,6 +94,7 @@ DEFAULT_CONFIG = {
             "name": "REVISION",
             "size": 100,
             "index": 3,
+            "horizontalAlignment": 'CENTER',
             "conditionalFormatting": [
                 {
                     "color": "green",

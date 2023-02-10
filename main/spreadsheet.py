@@ -216,6 +216,27 @@ class SpreadsheetUtil:
             }
         }
 
+    @staticmethod
+    def get_horizontal_alignment_request(sheet_id, start_row_index, end_row_index, start_column_index,
+                                         end_column_index):
+        return {
+            'repeatCell': {
+                'range': {
+                    'sheetId': sheet_id,
+                    'startRowIndex': start_row_index,
+                    'endRowIndex': end_row_index,
+                    'startColumnIndex': start_column_index,
+                    'endColumnIndex': end_column_index
+                },
+                'cell': {
+                    'userEnteredFormat': {
+                        'horizontalAlignment': 'CENTER',
+                    }
+                },
+                'fields': 'userEnteredFormat(horizontalAlignment)'
+            }
+        }
+
 
 class SpreadsheetActions:
     def __init__(self, config, sheet_name, rows):
@@ -261,6 +282,17 @@ class SpreadsheetActions:
     def collect_freeze_rows_request(self):
         request = self.util.get_freeze_rows_rq(self.sheet_id, 1)
         self.requests.append(request)
+
+    def collect_horizontal_alignment_requests(self):
+        for column in self.config.columns:
+            if column['horizontalAlignment']:
+                request = self.util.get_horizontal_alignment_request(
+                    sheet_id=self.sheet_id,
+                    start_row_index=1,
+                    end_row_index=len(self.rows),
+                    start_column_index=column['index'],
+                    end_column_index=column['index']+1)
+                self.requests.append(request)
 
     def collect_header_formatting_request(self):
         request = self.util.get_repeat_cell_request(
