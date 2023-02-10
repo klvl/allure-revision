@@ -22,6 +22,7 @@ def main():
     spreadsheet.upload_rows()
 
     # Collect requests
+    spreadsheet.collect_move_sheet_to_index_request()
     spreadsheet.collect_update_column_size_requests()
     spreadsheet.collect_sort_request()
     spreadsheet.collect_freeze_rows_request()

@@ -11,6 +11,7 @@ class ConfigParser:
         self.colors = COLORS
         self.column_names = COLUMN_NAMES
         self.columns = self.init_columns()
+        self.new_sheet_index = self.init_new_sheet_index()
         self.creds = CREDS
         self.token = self.init_token(token_from_args)
 
@@ -166,6 +167,9 @@ class ConfigParser:
                     final_columns.append(column)
 
         return final_columns
+
+    def init_new_sheet_index(self):
+        return self.config['newSheetIndex']
 
     def init_token(self, token_from_args):
         if token_from_args is not None:

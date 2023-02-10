@@ -79,6 +79,19 @@ class SpreadsheetUtil:
             print(err)
 
     @staticmethod
+    def get_update_sheet_index_request(sheet_id, index, sheet_name):
+        return {
+            'updateSheetProperties': {
+                'properties': {
+                    'sheetId': sheet_id,
+                    'index': index,
+                    'title': sheet_name
+                },
+                'fields': 'index,title'
+            }
+        }
+
+    @staticmethod
     def get_update_dimension_rq(sheet_id, dimension, start_index, end_index, pixel_size):
         return {
             'updateDimensionProperties': {
@@ -199,6 +212,10 @@ class SpreadsheetActions:
 
     def upload_rows(self):
         self.util.upload_rows(self.sheet_name, 'A:Z', spreadsheet_id=self.config.spreadsheet_id, rows=self.rows)
+
+    def collect_move_sheet_to_index_request(self):
+        request = self.util.get_update_sheet_index_request(self.sheet_id, self.config.new_sheet_index, self.sheet_name)
+        self.requests.append(request)
 
     def collect_update_column_size_requests(self):
         for column in self.config.columns:
