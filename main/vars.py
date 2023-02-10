@@ -33,9 +33,9 @@ COLORS = {  # https://kierandixon.com/google-sheets-colors/
         'blue': 0  # 0/255
     },
     'grey': {  # grey
-        0.8,  # 204/255
-        0.8,  # 204/255
-        0.8  # 204/255
+        'red': 0.8,  # 204/255
+        'green': 0.8,  # 204/255
+        'blue': 0.8  # 204/255
     },
     'light_grey': {  # light grey 3
         'red': 0.952941176470588,  # 243/255
@@ -136,8 +136,20 @@ DEFAULT_CONFIG = {
                     'ifValue': 'failed'
                 },
                 {
+                    'color': 'light_green',
+                    'ifValue': 'passed'
+                },
+                {
+                    'color': 'grey',
+                    'ifValue': 'skipped'
+                },
+                {
                     'color': 'light_yellow',
                     'ifValue': 'broken'
+                },
+                {
+                    'color': 'light_purple',
+                    'ifValue': 'unknown'
                 }
             ]
         },
@@ -154,6 +166,10 @@ DEFAULT_CONFIG = {
                 {
                     'color': 'light_green',
                     'ifValue': 'passed'
+                },
+                {
+                    'color': 'red',
+                    'ifValue': 'issue'
                 },
                 {
                     'color': 'red',
