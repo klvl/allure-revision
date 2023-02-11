@@ -162,6 +162,15 @@ class ConfigParser:
                 print('The index ' + str(column['index']) + ' is duplicated!')
                 exit()
 
+        # Check that columns does not contain reportValue and dropdown params together
+        for column in columns:
+            try:
+                if column['reportValue'] is not None and column['dropdown'] is not None:
+                    print('It is not allowed to use "reportValue" and "dropdown" parameters together in config.json!')
+                    exit()
+            except KeyError:
+                pass
+
         # Check if reportValue is valid in all columns
         for column in columns:
             try:
