@@ -22,15 +22,15 @@ AVAILABLE_REPORT_VALUES = ['fullName', 'message', 'category', 'status']
 AVAILABLE_HORIZONTAL_ALIGNMENTS = ['LEFT', 'CENTER', 'RIGHT', 'JUSTIFYLEFT']
 COLUMN_NAMES = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'G', 'K', 'L', 'M', 'N', 'O']
 COLORS = {  # https://kierandixon.com/google-sheets-colors/
-    'white': {  # white
-        'red': 1,  # 255/255
-        'green': 1,  # 255/255
-        'blue': 1  # 255/255
-    },
     'black': {  # black
         'red': 0,  # 0/255
         'green': 0,  # 0/255
         'blue': 0  # 0/255
+    },
+    'white': {  # white
+        'red': 1,  # 255/255
+        'green': 1,  # 255/255
+        'blue': 1  # 255/255
     },
     'grey': {  # grey
         'red': 0.8,  # 204/255

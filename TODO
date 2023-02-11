@@ -1,0 +1,8 @@
+- exit from a script on first run after getting refresh token
+- add validation if statuses array is not empty
+- get rid of column.index
+- exit script if column contains reportValue and dropdown
+- refactor reportValure message, to have meesageShort and message
+- add custom colors
+- add colors pictures to readme
+- add formatting to column (should not be used together with conditional formatting)
