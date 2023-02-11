@@ -89,10 +89,17 @@ class ConfigParser:
 
     def init_statuses(self):
         statuses = None
+
+        # Validate 'statuses' param exists
         try:
             statuses = self.config['statuses']
         except KeyError:
             print('There is no "statuses" parameter in config.json!')
+            exit()
+
+        # Validate 'statuses' are not empty
+        if not statuses:
+            print('The "statuses" array cannot be empty in config.json!')
             exit()
 
         # Validate all statuses are expected
