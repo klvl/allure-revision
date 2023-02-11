@@ -28,7 +28,8 @@ class SpreadsheetUtil:
                     flow = InstalledAppFlow.from_client_config(self.pre_defined_creds, self.scopes)
                     creds = flow.run_local_server(port=0)
                     token = json.loads(creds.to_json())['refresh_token']
-                    print('Save your "refresh_token" to run without login next time:\n' + token + "\n")
+                    print('\n\nSetup is completed!\n\nRefresh token: ' + token)
+                    exit()
             return build('sheets', 'v4', credentials=creds)
         except HttpError as err:
             print(err)

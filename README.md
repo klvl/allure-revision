@@ -5,12 +5,17 @@ The tool to parse allure-report and upload raw results to spreadsheet API.
 
 **Outline:**
 * [Setup](#setup)
+* [Usage](#usage)
 * [Arguments](#arguments)
 * [Configuration](#configuration)
 
 
 ## Setup
 
+* Extract spreadsheet ID
+  * Create a new Google spreadsheet or open existing 
+  * Open your spreadsheet, for example [https://docs.google.com/spreadsheets/d/1GOOG39g3lESP0rEADS5EeetIDtoE9XtRactAndUseE8/](https://docs.google.com/spreadsheets/d/1GOOG39g3lESP0rEADS5EeetIDtoE9XtRactAndUseE8/)
+  * Find your spreadsheet ID in URL, which is `1GOOG39g3lESP0rEADS5EeetIDtoE9XtRactAndUseE8` in example
 * Clone the project
 ```shell
 git clone https://github.com/klvl/allure-revision
@@ -19,23 +24,33 @@ git clone https://github.com/klvl/allure-revision
 ```shell
 pip install -r allure-revision/requirements.txt
 ```
-* Create a new Google spreadsheet
-* Extract spreadsheet ID from URL(see the [Arguments](#arguments) section to know how to get it)
-* Generate allure report
-* Run a script 
+* Run a script, passing `setup` argument and `id` (your spreadsheet ID)
 ```shell
-python3 main/make.py --report /path/to/allure-reprot --id <your_spreadsheet_id>
+python3 main/make.py --id 1GOOG39g3lESP0rEADS5EeetIDtoE9XtRactAndUseE8
 ```
-* Login your Google account, when a web browser is open 
-* Click on `Advanced` link, when a 'Google hasn't verified this app' is displayed
-* Click on `Go to allure-revision-app (unsafe)` link  
-* Click `Continue`  
-* Find a `refresh_token` in the output of a script and save it to run app without Google authentication next time   
+* Grant allure-revision app with the access to your spreadsheet when a web browser is open
+  * Login your Google account
+  * Click on `Advanced` link, when a "Google hasn't verified this app" page is displayed
+  * Click on `Go to allure-revision-app (unsafe)` link  
+  * Click `Continue`  
+* Go back to a terminal and copy your refresh token in the command output
+* Congratulations! Follow [Usage](#usage) section for further usage
+
+
+## Usage
+
+Please, complete steps from the [Setup](#setup) section prior to use a tool
+
+* Generate allure report
+* Run revision
+```shell
+python3 main/make.py --report path/to/allure-report --id 1GOOG39g3lESP0rEADS5EeetIDtoE9XtRactAndUseE8 --token 1//079xMTmTOxNswPgXIANACGTcSNwF-O9Br9IEYQw7mKPzZJ9GT2i5e1qWvPGSTfqIdr44Is92yXZw8gEX-d2_JhIRGxNXNwBOonIw
+```
 
 
 ## Arguments
 
-**--report | Path to allure-report folder**
+### --report | Path to allure-report folder
 
 If this argument is not specified, a script will search for it in current working
 directory.
@@ -46,10 +61,12 @@ python3 main/make.py --report path/to/allure-report
 
 ### --id | Spreadsheet ID
 
-It can be extracted from a spreadsheet URL. For example a spreadsheet ID in the following URL
-[https://docs.google.com/spreadsheets/d/1GOOG39g3lESP0rEADS5EeetIDtoE9XtRactAndUseE8/](https://docs.google.com/spreadsheets/d/1GOOG39g3lESP0rEADS5EeetIDtoE9XtRactAndUseE8/)
-is `1GOOG39g3lESP0rEADS5EeetIDtoE9XtRactAndUseE8`. If `--id` argument is not specified, the script will look for the
-`id` parameter in config.json file, in current working directory.
+To extract spreadsheet ID:
+* Open your spreadsheet, for example [https://docs.google.com/spreadsheets/d/1GOOG39g3lESP0rEADS5EeetIDtoE9XtRactAndUseE8/](https://docs.google.com/spreadsheets/d/1GOOG39g3lESP0rEADS5EeetIDtoE9XtRactAndUseE8/)
+* Find your spreadsheet ID in URL, which is `1GOOG39g3lESP0rEADS5EeetIDtoE9XtRactAndUseE8` in example
+
+If `--id` argument is not specified, the script will look for the [id](#id-optional) parameter in config.json. If the
+`id` is specified in config.json and is passed to a script as CLI argument, the value from CLI argument will be used.
 
 ```shell
 python3 main/make.py --id 1GOOG39g3lESP0rEADS5EeetIDtoE9XtRactAndUseE8
@@ -104,18 +121,25 @@ path to a file
 
 ### id [optional]
 
+To extract spreadsheet ID:
+* Open your spreadsheet, for example [https://docs.google.com/spreadsheets/d/1GOOG39g3lESP0rEADS5EeetIDtoE9XtRactAndUseE8/](https://docs.google.com/spreadsheets/d/1GOOG39g3lESP0rEADS5EeetIDtoE9XtRactAndUseE8/)
+* Find your spreadsheet ID in URL, which is `1GOOG39g3lESP0rEADS5EeetIDtoE9XtRactAndUseE8` in example
+
+If `id` parameter is not specified, the script will look for the [--id](#--id--spreadsheet-id) CLI argument. If the 
+`id` is specified in config.json and is passed to a script as CLI argument, the value from CLI argument will be used.
+
 ```json
 {
   "id": "1GOOo39g3lESP0rEADS5EeetIDtoE9XtRactAndUseE8"
 }
 ```
 
-The `id` parameter is a spreadsheet ID. Read where to find a spreadsheet ID in 
-[--id | Spreadsheet ID](#--id--spreadsheet-id) section. If `id` is specified in a config.json and is passed as a CLI
-argument, the value from argument will be used.
-
 
 ### token [optional]
+
+The `token` parameter is a refresh token. Read where to find a spreadsheet ID in
+[--token | Refresh token](#--token--refresh-token) section. If `token` is specified in a config.json and is passed as a 
+CLI argument, the value from argument will be used.
 
 ```json
 {
@@ -123,18 +147,8 @@ argument, the value from argument will be used.
 }
 ```
 
-The `token` parameter is a refresh token. Read where to find a spreadsheet ID in
-[--token | Refresh token](#--token--refresh-token) section. If `token` is specified in a config.json and is passed as a 
-CLI argument, the value from argument will be used.
-
 
 ### statuses [mandatory]
-
-```json
-{
-  "statuses": ["failed", "broken"]
-}
-```
 
 The `statuses` array specifies which tests statuses it will get from allure report and upload to a spreadsheet. For 
 example, if only "failed" status is specified, it will get only tests with "failed" status from allure report and upload
@@ -142,8 +156,17 @@ to a spreadsheet. The `statuses` array cannot be empty.
 
 Supported values: "failed", "passed", "skipped", "broken", "unknown"
 
+```json
+{
+  "statuses": ["failed", "broken"]
+}
+```
+
 
 ### newSheetIndex [optional]
+
+The `newSheetIndex` specifies where to put sheet in a document. If this value is not specified, the new sheet is created
+in the end of all sheets in a document.
 
 ```json
 {
@@ -151,11 +174,13 @@ Supported values: "failed", "passed", "skipped", "broken", "unknown"
 }
 ```
 
-The `newSheetIndex` specifies where to put sheet in a document. If this value is not specified, the new sheet is created
-in the end of all sheets in a document.
-
 
 ### headerFormatting [optional]
+
+The `headerFormatting` specifies the first row (header) formatting. The `headerFormatting.backgroundColor` specifies
+a background color for header row. The `headerFormatting.foregroundColor` specifies the font color for header row. The
+`headerFormatting.fontSize` specifies the font size for a header row. See available `backgroundColor` and 
+`foregroundColor` values in a [Colors](#colors) section.
 
 ```json
 {
@@ -167,13 +192,11 @@ in the end of all sheets in a document.
 }
 ```
 
-The `headerFormatting` specifies the first row (header) formatting. The `headerFormatting.backgroundColor` specifies
-a background color for header row. The `headerFormatting.foregroundColor` specifies the font color for header row. The
-`headerFormatting.fontSize` specifies the font size for a header row. See available `backgroundColor` and 
-`foregroundColor` values in a [Colors](#colors) section. 
-
 
 ### columns [mandatory]
+
+The `columns` is array of column json objects. It specifies the columns and its properties which will be displayed in 
+allure report. Read about column properties in the following sections. 
 
 ```json
 {
@@ -203,10 +226,9 @@ a background color for header row. The `headerFormatting.foregroundColor` specif
 }
 ```
 
-The `columns` is array of column json objects. It specifies the columns and its properties which will be displayed in 
-allure report. Read about column properties in the following sections. 
-
 ### columns.column.name [mandatory]
+
+The `columns.column.name` is a column name which will be displayed in a spreadsheet.
 
 ```json
 {
@@ -218,10 +240,10 @@ allure report. Read about column properties in the following sections.
 }
 ```
 
-The `columns.column.name` is a column name which will be displayed in a spreadsheet.
-
 
 ### columns.column.size [optional]
+
+The `columns.column.size` specifies a column size in a spreadsheet, in pixels.
 
 ```json
 {
@@ -233,10 +255,11 @@ The `columns.column.name` is a column name which will be displayed in a spreadsh
 }
 ```
 
-The `columns.column.size` specifies a column size in a spreadsheet, in pixels.
-
 
 ### columns.column.index [mandatory]
+
+The `columns.column.index` specifies a column sequence in a spreadsheet. The index start from 0. It is not allowed to
+duplicate indexes. It is not allowed to miss a sequence, e.g. 0, 1, 2, 4, 5 (where 3 is missed).
 
 ```json
 {
@@ -248,21 +271,8 @@ The `columns.column.size` specifies a column size in a spreadsheet, in pixels.
 }
 ```
 
-The `columns.column.index` specifies a column sequence in a spreadsheet. The index start from 0. It is not allowed to
-duplicate indexes. It is not allowed to miss a sequence, e.g. 0, 1, 2, 4, 5 (where 3 is missed).
-
 
 ### columns.column.reportValue [optional]
-
-```json
-{
-  "columns": [
-    {
-      "reportValue": "fullName"
-    }
-  ]
-}
-```
 
 The `columns.column.reportValue` specifies the information which we want to get from allure report and display in a
 spreadsheet. If this value is not specified, the column will be a blank or with a
@@ -277,7 +287,22 @@ Supported values:
 * "status" — test case status
 
 
+```json
+{
+  "columns": [
+    {
+      "reportValue": "fullName"
+    }
+  ]
+}
+```
+
+
 ### columns.column.horizontalAlignment [optional]
+
+The `columns.column.horizontalAlignment` specifies a horizontal alignment for all rows for a column.
+
+Supported values: "LEFT", "CENTER", "RIGHT", "JUSTIFYLEFT"
 
 ```json
 {
@@ -289,12 +314,13 @@ Supported values:
 }
 ```
 
-The `columns.column.horizontalAlignment` specifies a horizontal alignment for all rows for a column.
-
-Supported values: "LEFT", "CENTER", "RIGHT", "JUSTIFYLEFT"
-
 
 ### columns.column.dropdown [optional]
+
+The `columns.column.dropdown` specifies array of dropdown values for all rows for a given column. The values is a free
+string input. If this value is not specified, the column will be a blank or with a
+[reportValue](#columnscolumnreportvalue-optional) value if specified. The column cannot contain both options together
+(`columns.column.reportValue` and `columns.column.dropdown`). 
 
 ```json
 {
@@ -306,13 +332,17 @@ Supported values: "LEFT", "CENTER", "RIGHT", "JUSTIFYLEFT"
 }
 ```
 
-The `columns.column.dropdown` specifies array of dropdown values for all rows for a given column. The values is a free
-string input. If this value is not specified, the column will be a blank or with a
-[reportValue](#columnscolumnreportvalue-optional) value if specified. The column cannot contain both options together
-(`columns.column.reportValue` and `columns.column.dropdown`). 
-
 
 ### columns.column.conditionalFormatting [optional]
+
+The `columns.column.conditionalFormatting` specifies array of conditional formatting rules. The 
+`columns.column.conditionalFormatting.ifValue` specifies the text which triggers a conditional formatting. The 
+`columns.column.conditionalFormatting.color` specifies a background color if the value from `ifValue` parameter is 
+present in cell. According to example above, if in a given column, in any row, a cell value is "failed", then full row will have a red 
+background color. 
+
+The conditional formatting rules are unlimited. The `ifValue` is a free string value. See available colors in a 
+[Colors](#colors) section.
 
 ```json
 {
@@ -328,15 +358,6 @@ string input. If this value is not specified, the column will be a blank or with
   ]
 }
 ```
-
-The `columns.column.conditionalFormatting` specifies array of conditional formatting rules. The 
-`columns.column.conditionalFormatting.ifValue` specifies the text which triggers a conditional formatting. The 
-`columns.column.conditionalFormatting.color` specifies a background color if the value from `ifValue` parameter is 
-present in cell. According to example above, if in a given column, in any row, a cell value is "failed", then full row will have a red 
-background color. 
-
-The conditional formatting rules are unlimited. The `ifValue` is a free string value. See available colors in a 
-[Colors](#colors) section.
 
 
 ### Default config

@@ -1,12 +1,9 @@
-import json
-
 from vars import *
-from default_config import *
 
 
 class ConfigParser:
-    def __init__(self, config_path, spreadsheet_id_from_args, token_from_args):
-        self.config = self.init_config(config_path)
+    def __init__(self, config, spreadsheet_id_from_args, token_from_args):
+        self.config = config
         self.spreadsheet_id = self.init_spreadsheet_id(spreadsheet_id_from_args)
         self.token = self.init_token(token_from_args)
         self.creds = CREDS
@@ -16,14 +13,6 @@ class ConfigParser:
         self.new_sheet_index = self.init_new_sheet_index()
         self.statuses = self.init_statuses()
         self.columns = self.init_columns()
-
-    @staticmethod
-    def init_config(config_path):
-        if config_path is not None:
-            file = open(config_path)
-            return json.load(file)
-        else:
-            return DEFAULT_CONFIG
 
     def init_spreadsheet_id(self, spreadsheet_id_from_args):
         if spreadsheet_id_from_args:
@@ -35,16 +24,13 @@ class ConfigParser:
             print('The "id" (spreadsheet ID) should be passed as --id argument or be specified in config.json!')
             exit()
 
-    def init_token(self, token_from_args):
+    @staticmethod
+    def init_token(token_from_args):
         if token_from_args is not None:
             TOKEN['refresh_token'] = token_from_args
             return TOKEN
         else:
-            try:
-                TOKEN['refresh_token'] = self.config['spreadsheet']['refresh_token']
-                return TOKEN
-            except KeyError:
-                return None
+            return None
 
     def init_header_formatting(self):
         try:
