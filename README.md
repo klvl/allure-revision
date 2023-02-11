@@ -272,7 +272,7 @@ spreadsheet. If this value is not specified, the column will be a blank or with 
 Supported values:
 * "fullName" — full test name, e.g. com.package.TestClass.myTestMethodName
 * "message" — failure message
-* "messageShort" — short failure message (will be displayed only the first line, before "\n")
+* "shortMessage" — short failure message (will be displayed only the first line, before "\n")
 * "category" — defect category
 * "status" — test case status
 

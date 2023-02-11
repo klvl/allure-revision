@@ -18,7 +18,7 @@ TOKEN = {
     'scopes': ['https://www.googleapis.com/auth/spreadsheets']
 }
 AVAILABLE_REPORT_STATUSES = ['failed', 'passed', 'skipped', 'broken', 'unknown']
-AVAILABLE_REPORT_VALUES = ['fullName', 'message', 'category', 'status']
+AVAILABLE_REPORT_VALUES = ['fullName', 'shortMessage', 'message', 'category', 'status']
 AVAILABLE_HORIZONTAL_ALIGNMENTS = ['LEFT', 'CENTER', 'RIGHT', 'JUSTIFYLEFT']
 COLUMN_NAMES = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'G', 'K', 'L', 'M', 'N', 'O']
 COLORS = {  # https://kierandixon.com/google-sheets-colors/

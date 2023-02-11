@@ -18,7 +18,7 @@ DEFAULT_CONFIG = {
         {
             'name': 'MESSAGE',
             'size': 250,
-            'reportValue': 'message',
+            'reportValue': 'shortMessage',
             'index': 1
         },
         {

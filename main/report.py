@@ -61,21 +61,26 @@ class ReportParser:
                 if not column['reportValue']:
                     row.append('')
 
-                # Add TEST name to row array
+                # Add 'fullName' name to row array
                 if column['reportValue'] == 'fullName':
                     row.append(test_name)
 
-                # Get MESSAGE and add to row array
+                # Get 'shortMessage' and add to row array
+                if column['reportValue'] == 'shortMessage':
+                    message = self.get_message(data).partition('\n')[0]
+                    row.append(message)
+
+                # Get 'message' and add to row array
                 if column['reportValue'] == 'message':
                     message = self.get_message(data)
                     row.append(message)
 
-                # Get CATEGORY and add to row array
+                # Get 'category' and add to row array
                 if column['reportValue'] == 'category':
                     category = self.get_category(data)
                     row.append(category)
 
-                # Add STATUS to row array
+                # Add 'status' to row array
                 if column['reportValue'] == 'status':
                     row.append(status)
 
@@ -115,7 +120,7 @@ class ReportParser:
 
     @staticmethod
     def get_message(data):
-        return data['statusMessage'].partition('\n')[0]
+        return data['statusMessage']
 
     @staticmethod
     def get_category(data):
