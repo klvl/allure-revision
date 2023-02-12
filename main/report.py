@@ -2,19 +2,19 @@ import json
 
 
 class ReportParser:
-    def __init__(self, report_path, config):
+    def __init__(self, report_path, columns, statuses):
         self.report_path = report_path
-        self.config = config
+        self.columns = columns
+        self.statuses = statuses
         self.retry_ref = []
         self.rows = []
         self.found_tests_amount = 0
-        if self.config.token is not None:  # If there is no token, then it is initialization run
-            self.get_rows()
+        self.get_rows()
 
     def get_rows(self):
         # Add header row
         header = []
-        for column in self.config.columns:
+        for column in self.columns:
             header.append(column['name'])
         self.rows.append(header)
 
@@ -37,7 +37,7 @@ class ReportParser:
         # Validate failed tests found
         self.found_tests_amount = len(self.rows) - 1  # All rows without header line
         if not self.found_tests_amount:
-            print('No tests with ' + str(self.config.statuses) + ' status(-es) found!')
+            print('No tests with ' + str(self.statuses) + ' status(-es) found!')
             exit()
 
         return self.rows
@@ -56,8 +56,8 @@ class ReportParser:
                 return row
 
         # If status is passed return empty row
-        if status in self.config.statuses:
-            for column in self.config.columns:
+        if status in self.statuses:
+            for column in self.columns:
                 # Add empty row
                 if not column['reportValue']:
                     row.append('')

@@ -1,38 +1,34 @@
-from vars import *
+from vars import AVAILABLE_REPORT_STATUSES, AVAILABLE_REPORT_VALUES, AVAILABLE_HORIZONTAL_ALIGNMENTS, COLUMN_NAMES, \
+    COLORS
 
 
 class ConfigParser:
-    def __init__(self, config, spreadsheet_id_from_args, token_from_args):
+    def __init__(self, config):
         self.config = config
-        self.spreadsheet_id = self.init_spreadsheet_id(spreadsheet_id_from_args)
-        self.token = self.init_token(token_from_args)
-        self.creds = CREDS
-        self.colors = COLORS
-        self.column_names = COLUMN_NAMES
-        self.header = self.init_header_formatting()
-        self.new_sheet_index = self.init_new_sheet_index()
-        self.statuses = self.init_statuses()
-        self.columns = self.init_columns()
+        self.spreadsheet_id = self.get_spreadsheet_id()
+        self.token = self.get_token()
 
-    def init_spreadsheet_id(self, spreadsheet_id_from_args):
-        if spreadsheet_id_from_args:
-            return spreadsheet_id_from_args
-
+    def get_spreadsheet_id(self):
         try:
-            return self.config['spreadsheet']['id']
+            return self.config['id']
         except KeyError:
-            print('The "id" (spreadsheet ID) should be passed as --id argument or be specified in config.json!')
+            return False
+
+    def get_token(self):
+        token = False
+        try:
+            if self.config['token']:
+                token = self.config['token']
+        except KeyError:
+            pass
+
+        if token == '':
+            print('The "token" value cannot be empty in config.json!')
             exit()
-
-    @staticmethod
-    def init_token(token_from_args):
-        if token_from_args is not None:
-            TOKEN['refresh_token'] = token_from_args
-            return TOKEN
         else:
-            return None
+            return token
 
-    def init_header_formatting(self):
+    def get_header_formatting(self):
         try:
             formatting = self.config['headerFormatting']
         except KeyError:
@@ -40,9 +36,9 @@ class ConfigParser:
 
         # Validate background color
         try:
-            if formatting['backgroundColor'] not in self.colors.keys():
+            if formatting['backgroundColor'] not in COLORS.keys():
                 print('The color "' + formatting['backgroundColor'] + '" is not available yet! ' +
-                      'Try one of the following:\n' + str(self.colors.keys()))
+                      'Try one of the following:\n' + str(COLORS.keys()))
                 exit()
         except KeyError:
             print('The backgroundColor is not present in headerFormatting!')
@@ -50,9 +46,9 @@ class ConfigParser:
 
         # Validate foreground color
         try:
-            if formatting['foregroundColor'] not in self.colors.keys():
+            if formatting['foregroundColor'] not in COLORS.keys():
                 print('The color "' + formatting['backgroundColor'] + '" is not available yet! ' +
-                      'Try one of the following:\n' + str(self.colors.keys()))
+                      'Try one of the following:\n' + str(COLORS.keys()))
                 exit()
         except KeyError:
             print('The foregroundColor is not present in headerFormatting!')
@@ -67,13 +63,13 @@ class ConfigParser:
 
         return formatting
 
-    def init_new_sheet_index(self):
+    def get_new_sheet_index(self):
         try:
             return self.config['newSheetIndex']
         except KeyError:
             return None
 
-    def init_statuses(self):
+    def get_statuses(self):
         statuses = None
 
         # Validate 'statuses' param exists
@@ -107,7 +103,7 @@ class ConfigParser:
 
         return statuses
 
-    def init_columns(self):
+    def get_columns(self):
         columns = None
 
         # Validate 'column' exist
@@ -123,7 +119,7 @@ class ConfigParser:
             exit()
 
         # Validate columns do not exceed maximum allowed amount
-        if len(columns) > len(self.column_names):
+        if len(columns) > len(COLUMN_NAMES):
             print('The maximum supported columns amount is 15! '
                   'Try less amount of columns or wait for the next release!')
             exit()
@@ -214,9 +210,9 @@ class ConfigParser:
                 rules = column['conditionalFormatting']
                 for rule in rules:
                     try:
-                        if rule['color'] not in self.colors.keys():
+                        if rule['color'] not in COLORS.keys():
                             print('The color "' + rule['color'] + '" is not available yet! ' +
-                                  'Try one of the following:\n' + str(self.colors.keys()))
+                                  'Try one of the following:\n' + str(COLORS.keys()))
                     except KeyError:
                         print('There is no color attribute in config.json! Affected column:\n' + column)
                         exit()

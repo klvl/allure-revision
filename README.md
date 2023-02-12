@@ -24,9 +24,9 @@ git clone https://github.com/klvl/allure-revision
 ```shell
 pip install -r allure-revision/requirements.txt
 ```
-* Run a script, passing `setup` argument and `id` (your spreadsheet ID)
+* Run a script
 ```shell
-python3 main/make.py --id 1GOOG39g3lESP0rEADS5EeetIDtoE9XtRactAndUseE8
+python3 main/make.py
 ```
 * Grant allure-revision app with the access to your spreadsheet when a web browser is open
   * Login your Google account
