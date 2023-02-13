@@ -337,8 +337,8 @@ class SpreadsheetActions:
                 sheet_id=sheet_id,
                 start_row_index=0,
                 end_row_index=1,
-                background_color=COLORS[header_formatting['backgroundColor']],
-                foreground_color=COLORS[header_formatting['foregroundColor']],
+                background_color=header_formatting['backgroundColor'],
+                foreground_color=header_formatting['foregroundColor'],
                 font_size=header_formatting['fontSize'])
             self.requests.append(request)
 
@@ -347,7 +347,7 @@ class SpreadsheetActions:
             if column['conditionalFormatting']:
                 for formatting_rule in column['conditionalFormatting']:
                     formula = self.get_conditional_formatting_formula(index, formatting_rule)
-                    color = COLORS[formatting_rule['color']]
+                    color = formatting_rule['color']
                     for column_index in range(len(columns)):
                         request = self.util.get_conditional_formatting_rq(
                             sheet_id=sheet_id,

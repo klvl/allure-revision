@@ -36,20 +36,14 @@ class ConfigParser:
 
         # Validate background color
         try:
-            if formatting['backgroundColor'] not in COLORS.keys():
-                print('The color "' + formatting['backgroundColor'] + '" is not available yet! ' +
-                      'Try one of the following:\n' + str(COLORS.keys()))
-                exit()
+            self.validate_color('backgroundColor', formatting['backgroundColor'])
         except KeyError:
             print('The backgroundColor is not present in headerFormatting!')
             exit()
 
         # Validate foreground color
         try:
-            if formatting['foregroundColor'] not in COLORS.keys():
-                print('The color "' + formatting['backgroundColor'] + '" is not available yet! ' +
-                      'Try one of the following:\n' + str(COLORS.keys()))
-                exit()
+            self.validate_color('foregroundColor', formatting['foregroundColor'])
         except KeyError:
             print('The foregroundColor is not present in headerFormatting!')
             exit()
@@ -60,6 +54,18 @@ class ConfigParser:
         except KeyError:
             print('The fontSize is not present in headerFormatting!')
             exit()
+
+        # Set final background color
+        if isinstance(formatting['backgroundColor'], dict):
+            formatting['backgroundColor'] = self.set_spreadsheet_color(formatting['backgroundColor'])
+        else:
+            formatting['backgroundColor'] = COLORS[formatting['backgroundColor']]
+
+        # Set final foreground color
+        if isinstance(formatting['foregroundColor'], dict):
+            formatting['foregroundColor'] = self.set_spreadsheet_color(formatting['foregroundColor'])
+        else:
+            formatting['foregroundColor'] = COLORS[formatting['foregroundColor']]
 
         return formatting
 
@@ -188,21 +194,76 @@ class ConfigParser:
         # Validate conditional formatting
         for column in columns:
             try:
-                rules = column['conditionalFormatting']
-                for rule in rules:
+                for rule in column['conditionalFormatting']:
+
+                    # Validate color
                     try:
-                        if rule['color'] not in COLORS.keys():
-                            print('The color "' + rule['color'] + '" is not available yet! ' +
-                                  'Try one of the following:\n' + str(COLORS.keys()))
+                        self.validate_color('conditionalFormatting.color', rule['color'])
                     except KeyError:
                         print('There is no color attribute in config.json! Affected column:\n' + column)
                         exit()
+
+                    # Validate ifValue
                     try:
                         rule['ifValue']
                     except KeyError:
                         print('The ifValue parameter should be present in conditionalFormatting in config.json!')
+
             except KeyError:
                 column['conditionalFormatting'] = False  # Set empty conditional formatting
 
+        # Set final conditional formatting
+        for column in columns:
+            try:
+                if column['conditionalFormatting']:
+                    for rule in column['conditionalFormatting']:
+                        if isinstance(rule['color'], dict):
+                            rule['color'] = self.set_spreadsheet_color(rule['color'])
+                        else:
+                            rule['color'] = COLORS[rule['color']]
+            except KeyError:
+                pass
+
         return columns
+
+    @staticmethod
+    def validate_color(param_name, param_value):
+        try:
+            if param_value in COLORS:
+                return True
+        except TypeError:
+            pass
+
+        try:
+            red = param_value['red']
+            green = param_value['green']
+            blue = param_value['blue']
+
+            if red > 255:
+                print('The "' + param_name + '" contains "red" parameter with value "' + red + '" > 255!\n' +
+                      'The custom colors are specified in RGB format!')
+                exit()
+
+            if green > 255:
+                print('The "' + param_name + '" contains "green" parameter with value "' + green + '" > 255!\n' +
+                      'The custom colors are specified in rgb format!')
+                exit()
+
+            if blue > 255:
+                print('The "' + param_name + '" contains "blue" parameter with value "' + blue + '" > 255!\n' +
+                      'The custom colors are specified in rgb format!')
+                exit()
+
+        except KeyError:
+            print('The "' + param_name + '" parameter should contain one of a pre-defined colors: "' +
+                  str(COLORS) + '"!\nAlternatively, you can specify custom color — jon object with "red", ' +
+                  '"green" and "blue" parameters!')
+            exit()
+
+    @staticmethod
+    def set_spreadsheet_color(colors):
+        return {'red': colors['red'] / 255, 'green': colors['green'] / 255, 'blue': colors['blue'] / 255}
+
+
+
 

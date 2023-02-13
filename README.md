@@ -355,7 +355,18 @@ You can find a default config in the `default_config.json` file.
 
 ### Colors
 
-See available color values below.
+For colors, it is possible to pass a pre-defined value and set a custom color.
+
+#### Pre-defined colors
+
+For a pre-defined color, pass a single value to color parameter value. For example:
+```json
+{
+  "foregroundColor": "black"
+}
+```
+
+See all available pre-defined colors below.
 
 <div>
     <div>
@@ -438,3 +449,29 @@ See available color values below.
     </div>
     <img title="Light purple" src="img/light_purple.png" width="80" height="18">
 </div>
+
+
+#### Custom color
+
+If it is required to pass the color which is not listed in [pre-defined colors](#pre-defined-colors), you can pass a 
+custom color:
+1. [Choose](https://kierandixon.com/google-sheets-colors/) a color
+2. Memorize its RGB values
+3. Pass it to color parameter value
+
+For example for red color in conditional formatting:
+```json
+{
+  "conditionalFormatting": [
+    {
+      "ifValue": "failed",
+      "color": {
+        "red": 255,
+        "green": 0,
+        "blue": 0
+      }
+    }
+  ]
+}
+```
+
