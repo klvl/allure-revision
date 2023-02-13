@@ -132,25 +132,6 @@ class ConfigParser:
                 print('The "column.name" param is set not for all columns in config.json!')
                 exit()
 
-        # Validate all columns have 'index' param
-        for column in columns:
-            try:
-                column['index']
-            except KeyError:
-                print('The "index" param is set not for all columns in config.json!')
-                exit()
-
-        # Validate indexes are unique
-        for column in columns:
-            index_duplication = 0
-            for c in columns:
-                if c['index'] == column['index']:
-                    index_duplication += 1
-
-            if index_duplication > 1:
-                print('The index ' + str(column['index']) + ' is duplicated!')
-                exit()
-
         # Check that columns does not contain reportValue and dropdown params together
         for column in columns:
             try:
@@ -223,22 +204,5 @@ class ConfigParser:
             except KeyError:
                 column['conditionalFormatting'] = False  # Set empty conditional formatting
 
-        # Validate indexes sequence
-        actual_indexes = [column['index'] for column in columns]
-        actual_indexes.sort()
-        expected_indexes = [index for index in range(len(columns))]
-        if actual_indexes != expected_indexes:
-            print('Invalid columns indexes sequence!\n\n' +
-                  'Actual sequence: ' + str(actual_indexes) + '\n' +
-                  'Expected sequence: ' + str(expected_indexes))
-            exit()
-
-        # Sort columns by index
-        final_columns = []
-        for i in range(len(columns)):
-            for column in columns:
-                if column['index'] == i:
-                    final_columns.append(column)
-
-        return final_columns
+        return columns
 

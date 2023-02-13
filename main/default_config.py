@@ -12,20 +12,17 @@ DEFAULT_CONFIG = {
         {
             'name': 'TEST',
             'size': 700,
-            'reportValue': 'fullName',
-            'index': 0
+            'reportValue': 'fullName'
         },
         {
             'name': 'MESSAGE',
             'size': 250,
             'reportValue': 'shortMessage',
-            'index': 1
         },
         {
             'name': 'STATUS',
             'size': 100,
             'reportValue': 'status',
-            'index': 2,
             'horizontalAlignment': 'CENTER',
             'conditionalFormatting': [
                 {
@@ -53,7 +50,6 @@ DEFAULT_CONFIG = {
         {
             'name': 'REVISION',
             'size': 100,
-            'index': 3,
             'horizontalAlignment': 'CENTER',
             'dropdown': ['fixed', 'passed', 'bug'],
             'conditionalFormatting': [
@@ -74,7 +70,6 @@ DEFAULT_CONFIG = {
         {
             'name': 'COMMENTS',
             'size': 500,
-            'index': 4
         }
     ]
 }

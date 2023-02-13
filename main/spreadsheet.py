@@ -289,9 +289,9 @@ class SpreadsheetActions:
             self.requests.append(request)
 
     def collect_update_column_size_requests(self, sheet_id, columns):
-        for column in columns:
+        for index, column in enumerate(columns):
             if column['size']:
-                request = self.util.get_update_column_size_rq(sheet_id, column['index'], column['size'])
+                request = self.util.get_update_column_size_rq(sheet_id, index, column['size'])
                 self.requests.append(request)
 
     def collect_sort_request(self, sheet_id, columns, rows):
@@ -309,26 +309,26 @@ class SpreadsheetActions:
         self.requests.append(request)
 
     def collect_set_dropdown_requests(self, sheet_id, columns, rows):
-        for column in columns:
+        for index, column in enumerate(columns):
             if column['dropdown']:
                 request = self.util.get_set_dropdown_request(
                     sheet_id=sheet_id,
                     start_row_index=1,
                     end_row_index=len(rows),
-                    start_column_index=column['index'],
-                    end_column_index=column['index']+1,
+                    start_column_index=index,
+                    end_column_index=index+1,
                     values=column['dropdown'])
                 self.requests.append(request)
 
     def collect_horizontal_alignment_requests(self, sheet_id, columns, rows):
-        for column in columns:
+        for index, column in enumerate(columns):
             if column['horizontalAlignment']:
                 request = self.util.get_horizontal_alignment_request(
                     sheet_id=sheet_id,
                     start_row_index=1,
                     end_row_index=len(rows),
-                    start_column_index=column['index'],
-                    end_column_index=column['index']+1)
+                    start_column_index=index,
+                    end_column_index=index+1)
                 self.requests.append(request)
 
     def collect_header_formatting_request(self, sheet_id, header_formatting):
@@ -343,10 +343,10 @@ class SpreadsheetActions:
             self.requests.append(request)
 
     def collect_conditional_formatting_to_all_rows(self, sheet_id, columns, rows):
-        for column in columns:
+        for index, column in enumerate(columns):
             if column['conditionalFormatting']:
                 for formatting_rule in column['conditionalFormatting']:
-                    formula = self.get_conditional_formatting_formula(column, formatting_rule)
+                    formula = self.get_conditional_formatting_formula(index, formatting_rule)
                     color = COLORS[formatting_rule['color']]
                     for column_index in range(len(columns)):
                         request = self.util.get_conditional_formatting_rq(
@@ -360,8 +360,8 @@ class SpreadsheetActions:
                         self.requests.append(request)
 
     @staticmethod
-    def get_conditional_formatting_formula(column, formatting_rule):
-        cell_ref = COLUMN_NAMES[column['index']] + '2'
+    def get_conditional_formatting_formula(index, formatting_rule):
+        cell_ref = COLUMN_NAMES[index] + '2'
         return '=EQ(' + cell_ref + '; "' + formatting_rule['ifValue'] + '")'
 
     def execute_requests(self, spreadsheet_id):

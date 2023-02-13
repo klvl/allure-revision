@@ -196,7 +196,9 @@ a background color for header row. The `headerFormatting.foregroundColor` specif
 ### columns [mandatory]
 
 The `columns` is array of column json objects. It specifies the columns and its properties which will be displayed in 
-allure report. Read about column properties in the following sections. 
+allure report. The columns sequence in a spreadsheet should be defined in columns array from top to bottom. For example,
+if you want to specify the 'REVISION' in the 2nd column of a spreadsheet, you should put its json object configuration
+on the 2nd place of columns array. Read about column properties in the following sections. 
 
 ```json
 {
@@ -204,7 +206,6 @@ allure report. Read about column properties in the following sections.
     {
       "name": "REVISION",
       "size": 100,
-      "index": 3,
       "horizontalAlignment": "CENTER",
       "dropdown": ["fixed", "passed", "bug"],
       "conditionalFormatting": [
@@ -250,22 +251,6 @@ The `columns.column.size` specifies a column size in a spreadsheet, in pixels.
   "columns": [
     {
       "size": 100
-    }
-  ]
-}
-```
-
-
-### columns.column.index [mandatory]
-
-The `columns.column.index` specifies a column sequence in a spreadsheet. The index start from 0. It is not allowed to
-duplicate indexes. It is not allowed to miss a sequence, e.g. 0, 1, 2, 4, 5 (where 3 is missed).
-
-```json
-{
-  "columns": [
-    {
-      "index": 3
     }
   ]
 }
