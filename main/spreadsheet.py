@@ -1,4 +1,5 @@
 import json
+import pyperclip
 
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
@@ -29,7 +30,10 @@ class SpreadsheetUtil:
                     flow = InstalledAppFlow.from_client_config(CREDS, SCOPES)
                     creds = flow.run_local_server(port=0)
                     token = json.loads(creds.to_json())['refresh_token']
-                    print('\n\nSetup is completed!\n\nRefresh token: ' + token)
+                    pyperclip.copy(token)
+                    print('\n\nSetup is completed!\n\n' +
+                          'Your refresh token is already copied to your clipboard:\n' +
+                          token)
                     exit()
             return build('sheets', 'v4', credentials=creds)
         except HttpError as err:

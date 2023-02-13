@@ -32,9 +32,9 @@ python3 main/make.py
   * Login your Google account
   * Click on `Advanced` link, when a "Google hasn't verified this app" page is displayed
   * Click on `Go to allure-revision-app (unsafe)` link  
-  * Click `Continue`  
-* Go back to a terminal and copy your refresh token in the command output
-* Congratulations! Follow [Usage](#usage) section for further usage
+  * Click `Continue`
+
+Congratulations! The refresh token is copied to your clipboard Follow [Usage](#usage) section for further usage
 
 
 ## Usage
@@ -317,7 +317,7 @@ Supported values: "LEFT", "CENTER", "RIGHT", "JUSTIFYLEFT"
 
 ### columns.column.dropdown [optional]
 
-The `columns.column.dropdown` specifies array of dropdown values for all rows for a given column. The values is a free
+The `columns.column.dropdown` specifies array of dropdown values for all rows for a given column. The values are a free
 string input. If this value is not specified, the column will be a blank or with a
 [reportValue](#columnscolumnreportvalue-optional) value if specified. The column cannot contain both options together
 (`columns.column.reportValue` and `columns.column.dropdown`). 

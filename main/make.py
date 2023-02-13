@@ -20,8 +20,6 @@ def main():
     sheet_id = spreadsheet.create_sheet(data.spreadsheet_id, data.sheet_name, data.columns, rows)
     spreadsheet.upload_rows(data.spreadsheet_id, data.sheet_name, rows)
 
-    # spreadsheet_id, sheet_id, sheet_name, new_sheet_index, columns, rows
-
     # Collect requests
     spreadsheet.collect_move_sheet_to_index_request(sheet_id, data.sheet_name, data.new_sheet_index)
     spreadsheet.collect_update_column_size_requests(sheet_id, data.columns)
