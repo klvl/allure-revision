@@ -9,7 +9,6 @@ class ReportParser:
         self.retry_ref = []
         self.rows = []
         self.found_tests_amount = 0
-        self.get_rows()
 
     def get_rows(self):
         # Add header row
