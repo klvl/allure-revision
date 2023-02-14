@@ -86,7 +86,8 @@ class DataProvider:
         if os.path.exists(path):
             return pathlib.Path(path)
         else:
-            print('The ' + path + ' path does not exist!')
+            print('The ' + path + ' path does not exist! Specify path to allure-report folder by --report CLI option ' +
+                  'or put the allure-report folder in current working directory!')
             exit()
 
     def get_sheet_name(self):
