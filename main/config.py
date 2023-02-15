@@ -1,3 +1,5 @@
+import json
+
 from vars import AVAILABLE_REPORT_STATUSES, AVAILABLE_REPORT_VALUES, AVAILABLE_HORIZONTAL_ALIGNMENTS, COLUMN_NAMES, \
     COLORS
 
@@ -38,35 +40,64 @@ class ConfigParser:
         try:
             self.validate_color('backgroundColor', formatting['backgroundColor'])
         except KeyError:
-            print('The backgroundColor is not present in headerFormatting!')
-            exit()
+            pass
+
+        # Set final background color
+        try:
+            if isinstance(formatting['backgroundColor'], dict):
+                formatting['backgroundColor'] = self.set_spreadsheet_color(formatting['backgroundColor'])
+            else:
+                formatting['backgroundColor'] = COLORS[formatting['backgroundColor']]
+        except KeyError:
+            pass
+
+        # Validate horizontal alignment
+        try:
+            if formatting['horizontalAlignment'] not in AVAILABLE_HORIZONTAL_ALIGNMENTS:
+                print('The "headerFormatting.horizontalAlignment" value is invalid in config.json!\n' +
+                      'Should be one of the following: ' + str(AVAILABLE_HORIZONTAL_ALIGNMENTS) + ' !')
+                exit()
+        except KeyError:
+            pass
+
+        # Validate if textFormat is present
+        try:
+            formatting['textFormat']
+        except KeyError:
+            return formatting
 
         # Validate foreground color
         try:
-            self.validate_color('foregroundColor', formatting['foregroundColor'])
+            self.validate_color('textFormat.foregroundColor', formatting['textFormat']['foregroundColor'])
         except KeyError:
-            print('The foregroundColor is not present in headerFormatting!')
-            exit()
+            pass
+
+        # Set final foreground color
+        try:
+            if isinstance(formatting['textFormat']['foregroundColor'], dict):
+                formatting['textFormat']['foregroundColor'] = \
+                    self.set_spreadsheet_color(formatting['textFormat']['foregroundColor'])
+            else:
+                formatting['textFormat']['foregroundColor'] = COLORS[formatting['textFormat']['foregroundColor']]
+        except KeyError:
+            pass
 
         # Validate font size
         try:
-            formatting['fontSize']
+            if formatting['textFormat']['fontSize'] <= 0:
+                print('The "headerFormatting.textFormat.fontSize" value should be more then 0!')
+                exit()
+            elif formatting['textFormat']['fontSize'] > 400:
+                print('The "headerFormatting.textFormat.fontSize" value should be less then 400!')
         except KeyError:
-            print('The fontSize is not present in headerFormatting!')
-            exit()
+            pass
 
-        # Set final background color
-        if isinstance(formatting['backgroundColor'], dict):
-            formatting['backgroundColor'] = self.set_spreadsheet_color(formatting['backgroundColor'])
-        else:
-            formatting['backgroundColor'] = COLORS[formatting['backgroundColor']]
-
-        # Set final foreground color
-        if isinstance(formatting['foregroundColor'], dict):
-            formatting['foregroundColor'] = self.set_spreadsheet_color(formatting['foregroundColor'])
-        else:
-            formatting['foregroundColor'] = COLORS[formatting['foregroundColor']]
-
+        # Validate bold
+        try:
+            if formatting['textFormat']['bold']:
+                formatting['textFormat']['bold'] = json.dumps(True)
+        except KeyError:
+            pass
         return formatting
 
     def get_new_sheet_index(self):

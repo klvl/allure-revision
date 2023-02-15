@@ -198,8 +198,7 @@ class SpreadsheetUtil:
         }
 
     @staticmethod
-    def get_repeat_cell_request(sheet_id, start_row_index, end_row_index, background_color, foreground_color,
-                                font_size):
+    def get_repeat_cell_request(sheet_id, start_row_index, end_row_index, formatting):
         return {
             'repeatCell': {
                 'range': {
@@ -208,15 +207,7 @@ class SpreadsheetUtil:
                     'endRowIndex': end_row_index
                 },
                 'cell': {
-                    'userEnteredFormat': {
-                        'backgroundColor': background_color,
-                        'horizontalAlignment': 'CENTER',
-                        'textFormat': {
-                            'foregroundColor': foreground_color,
-                            'fontSize': font_size,
-                            'bold': json.dumps(True)
-                        }
-                    }
+                    'userEnteredFormat': formatting
                 },
                 'fields': 'userEnteredFormat(backgroundColor,textFormat,horizontalAlignment)'
             }
@@ -337,9 +328,7 @@ class SpreadsheetActions:
                 sheet_id=sheet_id,
                 start_row_index=0,
                 end_row_index=1,
-                background_color=header_formatting['backgroundColor'],
-                foreground_color=header_formatting['foregroundColor'],
-                font_size=header_formatting['fontSize'])
+                formatting=header_formatting)
             self.requests.append(request)
 
     def collect_conditional_formatting_to_all_rows(self, sheet_id, columns, rows):
