@@ -198,13 +198,16 @@ class SpreadsheetUtil:
         }
 
     @staticmethod
-    def get_repeat_cell_request(sheet_id, start_row_index, end_row_index, formatting):
+    def get_repeat_cell_request(sheet_id, start_row_index, end_row_index, start_column_index, end_column_index,
+                                formatting):
         return {
             'repeatCell': {
                 'range': {
                     'sheetId': sheet_id,
                     'startRowIndex': start_row_index,
-                    'endRowIndex': end_row_index
+                    'endRowIndex': end_row_index,
+                    'startColumnIndex': start_column_index,
+                    'endColumnIndex': end_column_index
                 },
                 'cell': {
                     'userEnteredFormat': formatting
@@ -307,7 +310,7 @@ class SpreadsheetActions:
                     start_row_index=1,
                     end_row_index=len(rows),
                     start_column_index=index,
-                    end_column_index=index+1,
+                    end_column_index=index + 1,
                     values=column['dropdown'])
                 self.requests.append(request)
 
@@ -319,17 +322,31 @@ class SpreadsheetActions:
                     start_row_index=1,
                     end_row_index=len(rows),
                     start_column_index=index,
-                    end_column_index=index+1)
+                    end_column_index=index + 1)
                 self.requests.append(request)
 
-    def collect_header_formatting_request(self, sheet_id, header_formatting):
+    def collect_header_formatting_request(self, sheet_id, header_formatting, columns):
         if header_formatting:
             request = self.util.get_repeat_cell_request(
                 sheet_id=sheet_id,
                 start_row_index=0,
                 end_row_index=1,
+                start_column_index=0,
+                end_column_index=len(columns),
                 formatting=header_formatting)
             self.requests.append(request)
+
+    def collect_column_formatting_requests(self, sheet_id, columns, rows):
+        for index, column in enumerate(columns):
+            if column['formatting']:
+                request = self.util.get_repeat_cell_request(
+                    sheet_id=sheet_id,
+                    start_row_index=1,
+                    end_row_index=len(rows),
+                    start_column_index=index,
+                    end_column_index=index+1,
+                    formatting=column['formatting'])
+                self.requests.append(request)
 
     def collect_conditional_formatting_to_all_rows(self, sheet_id, columns, rows):
         for index, column in enumerate(columns):
@@ -341,9 +358,9 @@ class SpreadsheetActions:
                         request = self.util.get_conditional_formatting_rq(
                             sheet_id=sheet_id,
                             start_column_index=column_index,
-                            end_column_index=column_index+1,
+                            end_column_index=column_index + 1,
                             start_row_index=1,
-                            end_row_index=len(rows)+1,
+                            end_row_index=len(rows) + 1,
                             formula=formula,
                             color=color)
                         self.requests.append(request)
@@ -360,4 +377,3 @@ class SpreadsheetActions:
     @staticmethod
     def get_link_to_sheet(spreadsheet_id, sheet_id):
         return 'https://docs.google.com/spreadsheets/d/' + str(spreadsheet_id) + '/edit#gid=' + str(sheet_id)
-
