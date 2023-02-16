@@ -76,11 +76,11 @@ class DataProvider:
         return token
 
     def get_test_cases_path(self):
-        if self.args_parser.allure_report_path:
-            if self.args_parser.allure_report_path[len(self.args_parser.allure_report_path) - 1] == '/':
-                path = self.args_parser.allure_report_path + "data/test-cases/"
+        if self.args_parser.report_path:
+            if self.args_parser.report_path[len(self.args_parser.report_path) - 1] == '/':
+                path = self.args_parser.report_path + "data/test-cases/"
             else:
-                path = self.args_parser.allure_report_path + "/data/test-cases/"
+                path = self.args_parser.report_path + "/data/test-cases/"
         else:
             path = 'allure-report/data/test-cases/'
 

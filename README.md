@@ -34,7 +34,7 @@ Please, complete steps from the [Setup](#setup) section prior to use a tool to o
 * Generate allure report  
 * Run revision  
 ```shell
-python3 main/make.py --id <spreadsheet-id> --token <refresh-token> --report path/to/allure-report
+python3 main/make.py --id <spreadsheet-id> --token <refresh-token> --report_path path/to/allure-report
 ```
 
 
