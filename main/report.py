@@ -23,7 +23,11 @@ class ReportParser:
         for file in self.report_path.iterdir():
             if not file.is_dir():
                 # Open file and load json data object
-                f = open(file)
+                try:
+                    f = open(file, encoding="utf8")
+                except UnicodeDecodeError:
+                    f = open(file, encoding="utf8")
+
                 data = json.load(f)
 
                 # Get row
