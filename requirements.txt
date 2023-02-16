@@ -1,4 +1,4 @@
-google_api_python_client==2.77.0
+google_api_python_client==2.78.0
 google_auth_oauthlib==1.0.0
 protobuf==4.21.12
 pyperclip~=1.8.2

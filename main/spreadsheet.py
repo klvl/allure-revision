@@ -6,7 +6,9 @@ from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
-from vars import CREDS, COLORS, COLUMN_NAMES
+from googleapiclient.errors import UnknownApiNameOrVersion
+from vars import CREDS, COLUMN_NAMES
+from sys import exit
 
 # If modifying these scopes, the refresh_token should be removed
 SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
@@ -35,7 +37,11 @@ class SpreadsheetUtil:
                           'Your refresh token is already copied to your clipboard:\n' +
                           token)
                     exit()
-            return build('sheets', 'v4', credentials=creds)
+                try:
+                    return build('sheets', 'v4', credentials=creds)
+                except UnknownApiNameOrVersion:
+                    discovery_url = 'https://sheets.googleapis.com/$discovery/rest?version=v4'
+                    return build('sheets', 'v4', credentials=creds, discoveryServiceUrl=discovery_url)
         except HttpError as err:
             print(err)
 

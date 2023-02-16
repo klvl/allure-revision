@@ -1,5 +1,7 @@
 import json
 
+from sys import exit
+
 
 class ReportParser:
     def __init__(self, report_path, columns, statuses):

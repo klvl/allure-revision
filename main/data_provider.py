@@ -7,6 +7,7 @@ from config import ConfigParser
 from default_config import DEFAULT_CONFIG
 from vars import TOKEN
 from datetime import datetime
+from sys import exit
 
 
 class DataProvider:
