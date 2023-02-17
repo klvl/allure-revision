@@ -130,11 +130,26 @@ class ReportParser:
 
     @staticmethod
     def get_category(data):
-        result = "Unknown"
-        for category in data['extra']['categories']:
-            if 'messageRegex' in category:
-                result = category['name']
-        return result
+        categories = data['extra']['categories']
+        multiple_categories = []
+
+        if len(categories) == 0:
+            return "No categories"
+        elif len(categories) == 1:
+            return categories[0]['name']
+        elif len(categories) == 2:
+            for category in categories:
+                if 'messageRegex' in category:
+                    return category['name']
+        else:
+            for category in categories:
+                if 'messageRegex' in category:
+                    multiple_categories.append(category['name'])
+
+        if len(multiple_categories) == 0:
+            return "No categories"
+        else:
+            return str(multiple_categories)
 
     @staticmethod
     def get_status(data):
