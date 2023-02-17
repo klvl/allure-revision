@@ -2,7 +2,9 @@
 .idea
 
 # Python
-__pycache__/
+*__pycache__/
+*.pytest_cache
 
 # Allure report
-allure-report
+tests/allure-report
+!tests/allure-report

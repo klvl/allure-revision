@@ -4,8 +4,8 @@ from sys import exit
 
 
 class ReportParser:
-    def __init__(self, report_path, columns, statuses):
-        self.report_path = report_path
+    def __init__(self, test_cases_path, columns, statuses):
+        self.test_cases_path = test_cases_path
         self.columns = columns
         self.statuses = statuses
         self.retry_ref = []
@@ -20,13 +20,13 @@ class ReportParser:
         self.rows.append(header)
 
         # Iterate through given path
-        for file in self.report_path.iterdir():
+        for file in self.test_cases_path.iterdir():
             if not file.is_dir():
                 # Open file and load json data object
                 try:
-                    f = open(file, encoding="utf8")
+                    f = open(file)
                 except UnicodeDecodeError:
-                    f = open(file, encoding="utf8")
+                    f = open(file, encoding='utf8')
 
                 data = json.load(f)
 
