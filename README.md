@@ -1,5 +1,7 @@
 # Allure Revision
 
+[![Tests](https://github.com/klvl/allure-revision/actions/workflows/pytests.yml/badge.svg)](https://github.com/klvl/allure-revision/actions/workflows/pytests.yml)
+
 The tool to parse allure-report and upload raw results to spreadsheet API.
 
 ## Setup
