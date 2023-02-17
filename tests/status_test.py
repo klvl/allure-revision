@@ -72,7 +72,7 @@ EXPECTED_ROWS = [
 
 
 @pytest.mark.parametrize('statuses, expected_rows', zip(STATUSES, EXPECTED_ROWS))
-def test_statuses(statuses, expected_rows):
+def test_status(statuses, expected_rows):
     report_parser = ReportParser(TEST_CASES_PATH, COLUMNS, statuses)
     actual_rows = sorted(report_parser.get_rows())
 
