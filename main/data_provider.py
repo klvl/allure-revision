@@ -23,7 +23,7 @@ class DataProvider:
             self.test_cases_path = self.get_test_cases_path()
             self.sheet_name = self.get_sheet_name()
             self.header_formatting = self.config_parser.get_header_formatting()
-            self.new_sheet_index = self.config_parser.get_new_sheet_index()
+            self.new_sheet_index = self.get_new_sheet_index()
             self.statuses = self.config_parser.get_statuses()
             self.columns = self.config_parser.get_columns()
         else:
@@ -96,4 +96,10 @@ class DataProvider:
             return self.args_parser.sheet_name
         else:
             return datetime.now().strftime("%m/%d/%y | %H:%M:%S")
+
+    def get_new_sheet_index(self):
+        if self.args_parser.sheet_index:
+            return self.args_parser.sheet_index
+        else:
+            return self.config_parser.get_new_sheet_index()
 

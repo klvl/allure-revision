@@ -9,6 +9,7 @@ class ArgumentsParser:
         self.token = self.get_token()
         self.report_path = self.get_allure_report_path()
         self.sheet_name = self.get_sheet_name()
+        self.sheet_index = self.get_sheet_index()
 
     @staticmethod
     def get_args():
@@ -21,6 +22,8 @@ class ArgumentsParser:
         parser.add_argument('--token', help='refresh token to use app without Google login. Run app the first time and '
                                             'get refresh_token in the output. Can be passed in config.json.')
         parser.add_argument('--sheet_name', help='specify sheet name. Current date and time is taken if not specified.')
+        parser.add_argument('--sheet_index', help='specify where index of new sheet among other sheets in a ' +
+                                                  'spreadsheet. The sheet index will be 0 if not specified.')
         parser.add_argument('--config_path', help='path to config.json. If not specified, the directory where script ' +
                                                   'is running from, will be taken.')
         return parser.parse_args()
@@ -46,6 +49,12 @@ class ArgumentsParser:
     def get_sheet_name(self):
         if self.args.sheet_name:
             return self.args.sheet_name
+        else:
+            return False
+
+    def get_sheet_index(self):
+        if self.args.sheet_index:
+            return self.args.sheet_index
         else:
             return False
 

@@ -10,7 +10,7 @@ DEFAULT_CONFIG = {
             "bold": True
         }
     },
-    "newSheetIndex": 0,
+    "sheetIndex": 0,
     "statuses": ["failed", "broken"],
     "columns": [
         {

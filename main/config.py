@@ -39,7 +39,7 @@ class ConfigParser:
 
     def get_new_sheet_index(self):
         try:
-            return self.config['newSheetIndex']
+            return self.config['sheetIndex']
         except KeyError:
             return None
 
