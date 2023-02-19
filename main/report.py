@@ -81,6 +81,11 @@ class ReportParser:
                     message = self.get_message(data)
                     row.append(message)
 
+                # Get 'stepFailed' and add to row array
+                if column['reportValue'] == 'stepFailed':
+                    step = self.get_step_failed(data)
+                    row.append(step)
+
                 # Get 'category' and add to row array
                 if column['reportValue'] == 'category':
                     category = self.get_category(data)
@@ -127,6 +132,15 @@ class ReportParser:
     @staticmethod
     def get_message(data):
         return data['statusMessage']
+
+    @staticmethod
+    def get_step_failed(data):
+        try:
+            for step in data['testStage']['steps']:
+                if step['status'] == 'failed':
+                    return step['name']
+        except KeyError:
+            return 'Unknown'
 
     @staticmethod
     def get_category(data):
