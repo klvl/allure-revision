@@ -1,5 +1,6 @@
 # IDEA
 .idea
+*.iml
 
 # Python
 *__pycache__/
@@ -8,3 +9,6 @@
 # Allure report
 tests/allure-report
 !tests/allure-report
+
+# Mac
+.DS_Store
