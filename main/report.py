@@ -101,6 +101,11 @@ class ReportParser:
                     duration = self.get_duration(data) / 1000
                     row.append(duration)
 
+                # Get 'durationMin' and add to row array
+                if column['reportValue'] == 'durationMin':
+                    duration = self.get_duration(data) / 1000 / 60
+                    row.append(duration)
+
                 # Add 'status' to row array
                 if column['reportValue'] == 'status':
                     row.append(status)
