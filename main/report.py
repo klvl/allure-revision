@@ -91,6 +91,11 @@ class ReportParser:
                     category = self.get_category(data)
                     row.append(category)
 
+                # Get 'durationMs' and add to row array
+                if column['reportValue'] == 'durationMs':
+                    category = self.get_duration(data)
+                    row.append(category)
+
                 # Add 'status' to row array
                 if column['reportValue'] == 'status':
                     row.append(status)
@@ -141,6 +146,13 @@ class ReportParser:
                     return step['name']
         except KeyError:
             return 'Unknown'
+
+    @staticmethod
+    def get_duration(data):
+        try:
+            return data['time']['duration']
+        except KeyError:
+            return '0'
 
     @staticmethod
     def get_category(data):
