@@ -73,7 +73,7 @@ DEFAULT_CONFIG = {
         },
         {
             "name": "COMMENTS",
-            "size": 500,
+            "size": 450,
         }
     ]
 }
