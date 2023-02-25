@@ -18,25 +18,22 @@ COLUMNS = [
         'reportValue': 'fullName'
     },
     {
-        'name': 'CATEGORY',
-        'reportValue': 'category'
+        'name': 'STEP FAILED',
+        'reportValue': 'stepFailed'
     }
 ]
 
-STATUSES = ['failed', 'broken', 'unknown']
+STATUSES = ['failed']
 
 EXPECTED_ROWS = [
-    ['TEST', 'CATEGORY'],
-    ['io.klvl.BrokenTest.testBroken', 'Broken tests'],
-    ['io.klvl.CategoriesTest.testCategoryByMessageRegExp', 'Response status code mismatch'],
-    ['io.klvl.CategoriesTest.testCategoryByMessageRegExp2', 'Response status code mismatch'],
-    ['io.klvl.CategoriesTest.testSimpleCategory', 'All Failed Tests'],
-    ['io.klvl.IssueTest.testIssue', 'Known issues'],
-    ['io.klvl.IssueTest.testIssues', 'Known issues']
+    ['TEST', 'STEP FAILED'],
+    ['io.klvl.CategoriesTest.testCategoryByMessageRegExp', 'failStepD'],
+    ['io.klvl.CategoriesTest.testCategoryByMessageRegExp2', 'failStepE'],
+    ['io.klvl.CategoriesTest.testSimpleCategory', 'failStepC']
 ]
 
 
-def test_category():
+def test_step_failed():
     report_parser = ReportParser(TEST_CASES_PATH, COLUMNS, STATUSES)
     actual_rows = sorted(report_parser.get_rows())
 
