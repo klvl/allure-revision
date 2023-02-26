@@ -1,13 +1,13 @@
-import os
 import json
+import os
 import pathlib
-
-from arguments import ArgumentsParser
-from config import ConfigParser
-from default_config import DEFAULT_CONFIG
-from vars import TOKEN
 from datetime import datetime
 from sys import exit
+
+from main.arguments import ArgumentsParser
+from main.config import ConfigParser
+from main.default_config import DEFAULT_CONFIG
+from main.vars import TOKEN
 
 
 class DataProvider:
@@ -36,22 +36,12 @@ class DataProvider:
             self.columns = None
 
     def get_config(self):
-        if self.args_parser.config_path:
-            path = self.args_parser.config_path
-        else:
-            path = 'config.json'
-
-        if os.path.exists(path):
-            path = pathlib.Path(path)
-        else:
-            path = None
-
-        # Parse config
-        if path is not None:
-            file = open(path)
-            return json.load(file)
-        else:
+        path = self.args_parser.config_path or "config.json"
+        path = pathlib.Path(path) if os.path.exists(path) else None
+        if path is None:
             return DEFAULT_CONFIG
+        file = open(path)
+        return json.load(file)
 
     def get_spreadsheet_id(self):
         if self.args_parser.spreadsheet_id:
@@ -70,36 +60,29 @@ class DataProvider:
             token = self.token
 
         if token is not None:
-            TOKEN['refresh_token'] = token
+            TOKEN["refresh_token"] = token
             token = TOKEN
 
         return token
 
     def get_test_cases_path(self):
         if self.args_parser.report_path:
-            if self.args_parser.report_path[len(self.args_parser.report_path) - 1] == '/':
-                path = self.args_parser.report_path + "data/test-cases/"
+            if self.args_parser.report_path[len(self.args_parser.report_path) - 1] == "/":
+                path = f"{self.args_parser.report_path}data/test-cases/"
             else:
-                path = self.args_parser.report_path + "/data/test-cases/"
+                path = f"{self.args_parser.report_path}/data/test-cases/"
         else:
-            path = 'allure-report/data/test-cases/'
+            path = "allure-report/data/test-cases/"
 
         if os.path.exists(path):
             return pathlib.Path(path)
-        else:
-            print('The ' + path + ' path does not exist! Specify path to allure-report folder by --report CLI option ' +
-                  'or put the allure-report folder in current working directory!')
-            exit()
+        print(
+            f"The {path} path does not exist! Specify path to allure-report folder by --report CLI option or put the allure-report folder in current working directory!"
+        )
+        exit()
 
     def get_sheet_name(self):
-        if self.args_parser.sheet_name:
-            return self.args_parser.sheet_name
-        else:
-            return datetime.now().strftime("%m/%d/%y | %H:%M:%S")
+        return self.args_parser.sheet_name or datetime.now().strftime("%m/%d/%y | %H:%M:%S")
 
     def get_new_sheet_index(self):
-        if self.args_parser.sheet_index:
-            return self.args_parser.sheet_index
-        else:
-            return self.config_parser.get_new_sheet_index()
-
+        return self.args_parser.sheet_index or self.config_parser.get_new_sheet_index()

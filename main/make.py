@@ -36,9 +36,14 @@ def main():
 
     # Print successful result message
     link = spreadsheet.get_link_to_sheet(data.spreadsheet_id, sheet_id)
-    print('\nUploaded ' + str(report.found_tests_amount) + ' tests with ' + str(data.statuses) + ' status(-es) ' +
-          'on the "' + data.sheet_name + '" sheet:\n' + link)
+    print(
+        f"\nUploaded {report.found_tests_amount}"
+        f"tests with {data.statuses} "
+        f"status(-es) "
+        f'on the "{data.sheet_name}"'
+        f"sheet:\n {link}"
+    )
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

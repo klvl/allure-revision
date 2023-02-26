@@ -12,3 +12,5 @@ tests/allure-report
 
 # Mac
 .DS_Store
+*.egg*
+.python-version

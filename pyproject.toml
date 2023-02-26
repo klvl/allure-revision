@@ -1,0 +1,24 @@
+[build-system]
+requires = ["setuptools", "setuptools-scm"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "allure-revision"
+version = "0.0.1"
+
+[project.scripts]
+allure-revisit = "main.make:main"
+
+[tool.setuptools.packages]
+find = {}
+
+[tool.isort]
+profile = "black"
+line_length = 120
+skip_glob = [".git", ".idea", ".vscode", "logs/"]
+
+[tool.black]
+line_length = 120
+
+[tool.mypy]
+ignore_missing_imports = true

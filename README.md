@@ -30,11 +30,11 @@ Congratulations! The refresh token is copied to your clipboard. Follow [Usage](#
 
 Please, complete steps from the [Setup](#setup) section prior to use a tool to obtain a refresh token.
 
-* Create a new Google spreadsheet or open existing  
-* Open your spreadsheet, for example [https://docs.google.com/spreadsheets/d/1GOOG39g3lESP0rEADS5EeetIDtoE9XtRactAndUseE8/](https://docs.google.com/spreadsheets/d/1GOOG39g3lESP0rEADS5EeetIDtoE9XtRactAndUseE8/)  
-* Find your spreadsheet ID in URL, which is `1GOOG39g3lESP0rEADS5EeetIDtoE9XtRactAndUseE8` in example  
-* Generate allure report  
-* Run revision  
+* Create a new Google spreadsheet or open existing
+* Open your spreadsheet, for example [https://docs.google.com/spreadsheets/d/1GOOG39g3lESP0rEADS5EeetIDtoE9XtRactAndUseE8/](https://docs.google.com/spreadsheets/d/1GOOG39g3lESP0rEADS5EeetIDtoE9XtRactAndUseE8/)
+* Find your spreadsheet ID in URL, which is `1GOOG39g3lESP0rEADS5EeetIDtoE9XtRactAndUseE8` in example
+* Generate allure report
+* Run revision
 ```shell
 python3 main/make.py --id <spreadsheet-id> --token <refresh-token> --report_path path/to/allure-report
 ```
@@ -45,4 +45,3 @@ python3 main/make.py --id <spreadsheet-id> --token <refresh-token> --report_path
 * [Arguments](https://github.com/klvl/allure-revision/wiki/Arguments)
 * [Configurations](https://github.com/klvl/allure-revision/wiki/Configuration)
 * [Colors](https://github.com/klvl/allure-revision/wiki/Colors)
-
