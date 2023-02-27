@@ -44,5 +44,6 @@ python3 main/make.py --id <spreadsheet-id> --token <refresh-token> --report_path
 
 * [Arguments](https://github.com/klvl/allure-revision/wiki/Arguments)
 * [Configurations](https://github.com/klvl/allure-revision/wiki/Configuration)
+* [Report values](https://github.com/klvl/allure-revision/wiki/Report-values)
 * [Colors](https://github.com/klvl/allure-revision/wiki/Colors)
 
