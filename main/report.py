@@ -51,7 +51,7 @@ class ReportParser:
         row = []
         # Get STATUS and TEST name
         status = self.get_status(data)
-        test_name = self.get_test_name(data)
+        test_name = self.get_full_name(data)
 
         # Remove test from final rows, if a current test is newer(was retried in test run)
         if self.is_test_already_present(test_name):
@@ -70,6 +70,11 @@ class ReportParser:
                 # Add 'fullName' name to row array
                 if column['reportValue'] == 'fullName':
                     row.append(test_name)
+
+                # Add 'package' name to row array
+                if column['reportValue'] == 'package':
+                    package = self.get_package(data);
+                    row.append(package)
 
                 # Get 'shortMessage' and add to row array
                 if column['reportValue'] == 'shortMessage':
@@ -120,7 +125,7 @@ class ReportParser:
         return row
 
     def collect_retry_ref(self, data):
-        name = self.get_test_name(data)
+        name = self.get_full_name(data)
         stop = self.get_stop_time(data)
         self.retry_ref.append({'name': name, 'stop_time': stop})
 
@@ -146,8 +151,18 @@ class ReportParser:
                 self.rows.remove(row)
 
     @staticmethod
-    def get_test_name(data):
+    def get_full_name(data):
         return data['fullName']
+
+    @staticmethod
+    def get_package(data):
+        try:
+            for label in data['labels']:
+                if label['name'] == 'package':
+                    return label['value']
+        except KeyError:
+            return ''
+        return ''
 
     @staticmethod
     def get_message(data):
