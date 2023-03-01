@@ -1,6 +1,5 @@
 import os
 import pathlib
-
 import pytest
 
 from main.report import ReportParser

@@ -67,6 +67,11 @@ class ReportParser:
                 if not column['reportValue']:
                     row.append('')
 
+                # Add 'name' to row array
+                if column['reportValue'] == 'name':
+                    name = self.get_name(data)
+                    row.append(name)
+
                 # Add 'fullName' name to row array
                 if column['reportValue'] == 'fullName':
                     row.append(test_name)
@@ -149,6 +154,10 @@ class ReportParser:
         for row in self.rows:
             if row[0] == test_name:
                 self.rows.remove(row)
+
+    @staticmethod
+    def get_name(data):
+        return data['name']
 
     @staticmethod
     def get_full_name(data):
