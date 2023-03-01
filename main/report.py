@@ -96,6 +96,11 @@ class ReportParser:
                     epic = self.get_story(data)
                     row.append(epic)
 
+                # Add 'suite' name to row array
+                if column['reportValue'] == 'suite':
+                    epic = self.get_suite(data)
+                    row.append(epic)
+
                 # Get 'shortMessage' and add to row array
                 if column['reportValue'] == 'shortMessage':
                     message = self.get_message(data).partition('\n')[0]
@@ -210,31 +215,45 @@ class ReportParser:
 
     @staticmethod
     def get_feature(data):
-        epic = ''
+        feature = ''
         try:
             for label in data['labels']:
                 if label['name'] == 'feature':
-                    if epic == '':
-                        epic = label['value']
+                    if feature == '':
+                        feature = label['value']
                     else:
-                        epic += '\n' + label['value']
+                        feature += '\n' + label['value']
         except KeyError:
-            return epic
-        return epic
+            return feature
+        return feature
 
     @staticmethod
     def get_story(data):
-        epic = ''
+        story = ''
         try:
             for label in data['labels']:
                 if label['name'] == 'story':
-                    if epic == '':
-                        epic = label['value']
+                    if story == '':
+                        story = label['value']
                     else:
-                        epic += '\n' + label['value']
+                        story += '\n' + label['value']
         except KeyError:
-            return epic
-        return epic
+            return story
+        return story
+
+    @staticmethod
+    def get_suite(data):
+        suite = ''
+        try:
+            for label in data['labels']:
+                if label['name'] == 'suite':
+                    if suite == '':
+                        suite = label['value']
+                    else:
+                        suite += '\n' + label['value']
+        except KeyError:
+            return suite
+        return suite
 
     @staticmethod
     def get_message(data):
