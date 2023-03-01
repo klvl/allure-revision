@@ -1,1 +1,1 @@
-{"total":20,"items":[]}
+{"total":3,"items":[{"uid":"a8fc0d539f0fd3442d529a4756870dad","name":"Allure revision","statistic":{"failed":1,"broken":2,"skipped":0,"passed":7,"unknown":0,"total":10}},{"uid":"892a286e231b1f49de4cf003383605cf","name":"Extra epic","statistic":{"failed":0,"broken":0,"skipped":0,"passed":1,"unknown":0,"total":1}},{"uid":"43a06bfe15862cf704857b2ed1621b59","name":"Report statuses","statistic":{"failed":0,"broken":0,"skipped":1,"passed":0,"unknown":0,"total":1}}]}
