@@ -78,8 +78,13 @@ class ReportParser:
 
                 # Add 'package' name to row array
                 if column['reportValue'] == 'package':
-                    package = self.get_package(data);
+                    package = self.get_package(data)
                     row.append(package)
+
+                # Add 'epic' name to row array
+                if column['reportValue'] == 'epic':
+                    epic = self.get_epic(data)
+                    row.append(epic)
 
                 # Get 'shortMessage' and add to row array
                 if column['reportValue'] == 'shortMessage':
@@ -157,11 +162,17 @@ class ReportParser:
 
     @staticmethod
     def get_name(data):
-        return data['name']
+        try:
+            return data['name']
+        except KeyError:
+            return ''
 
     @staticmethod
     def get_full_name(data):
-        return data['fullName']
+        try:
+            return data['fullName']
+        except KeyError:
+            return ''
 
     @staticmethod
     def get_package(data):
@@ -174,8 +185,25 @@ class ReportParser:
         return ''
 
     @staticmethod
+    def get_epic(data):
+        epic = ''
+        try:
+            for label in data['labels']:
+                if label['name'] == 'epic':
+                    if epic == '':
+                        epic = label['value']
+                    else:
+                        epic += '\n' + label['value']
+        except KeyError:
+            return epic
+        return epic
+
+    @staticmethod
     def get_message(data):
-        return data['statusMessage']
+        try:
+            return data['statusMessage']
+        except KeyError:
+            return ''
 
     @staticmethod
     def get_step_failed(data):
@@ -184,22 +212,25 @@ class ReportParser:
                 if step['status'] == 'failed':
                     return step['name']
         except KeyError:
-            return 'Unknown'
+            return ''
 
     @staticmethod
     def get_duration(data):
         try:
             return data['time']['duration']
         except KeyError:
-            return '0'
+            return ''
 
     @staticmethod
     def get_category(data):
-        categories = data['extra']['categories']
+        try:
+            categories = data['extra']['categories']
+        except KeyError:
+            categories = []
         multiple_categories = []
 
         if len(categories) == 0:
-            return "No categories"
+            return ''
         elif len(categories) == 1:
             return categories[0]['name']
         elif len(categories) == 2:
@@ -212,14 +243,20 @@ class ReportParser:
                     multiple_categories.append(category['name'])
 
         if len(multiple_categories) == 0:
-            return "No categories"
+            return ''
         else:
             return str(multiple_categories)
 
     @staticmethod
     def get_status(data):
-        return data['status']
+        try:
+            return data['status']
+        except KeyError:
+            return ''
 
     @staticmethod
     def get_stop_time(data):
-        return data['time']['stop']
+        try:
+            return data['time']['stop']
+        except KeyError:
+            return ''
