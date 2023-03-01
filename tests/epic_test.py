@@ -51,7 +51,7 @@ EXPECTED_ROWS = [
 ]
 
 
-def test_package():
+def test_epic():
     report_parser = ReportParser(TEST_CASES_PATH, COLUMNS, STATUSES)
     actual_rows = sorted(report_parser.get_rows())
 

@@ -86,6 +86,11 @@ class ReportParser:
                     epic = self.get_epic(data)
                     row.append(epic)
 
+                # Add 'feature' name to row array
+                if column['reportValue'] == 'feature':
+                    epic = self.get_feature(data)
+                    row.append(epic)
+
                 # Get 'shortMessage' and add to row array
                 if column['reportValue'] == 'shortMessage':
                     message = self.get_message(data).partition('\n')[0]
@@ -190,6 +195,20 @@ class ReportParser:
         try:
             for label in data['labels']:
                 if label['name'] == 'epic':
+                    if epic == '':
+                        epic = label['value']
+                    else:
+                        epic += '\n' + label['value']
+        except KeyError:
+            return epic
+        return epic
+
+    @staticmethod
+    def get_feature(data):
+        epic = ''
+        try:
+            for label in data['labels']:
+                if label['name'] == 'feature':
                     if epic == '':
                         epic = label['value']
                     else:
