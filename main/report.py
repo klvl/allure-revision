@@ -121,6 +121,11 @@ class ReportParser:
                     category = self.get_category(data)
                     row.append(category)
 
+                # Get 'severity' and add to row array
+                if column['reportValue'] == 'severity':
+                    severity = self.get_severity(data)
+                    row.append(severity)
+
                 # Get 'durationMs' and add to row array
                 if column['reportValue'] == 'durationMs':
                     duration = self.get_duration(data)
@@ -303,6 +308,16 @@ class ReportParser:
             return ''
         else:
             return str(multiple_categories)
+
+    @staticmethod
+    def get_severity(data):
+        try:
+            for label in data['labels']:
+                if label['name'] == 'severity':
+                    return label['value']
+        except KeyError:
+            return ''
+        return ''
 
     @staticmethod
     def get_status(data):
