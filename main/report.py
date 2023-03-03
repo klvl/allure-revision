@@ -8,7 +8,12 @@ class ReportParser:
         self.test_cases_path = test_cases_path
         self.columns = columns
         self.statuses = statuses
+        self.report_values = self.get_report_values()
+        self.test_name_key_retry_ref = self.get_test_name_key_retry_ref()
+        self.test_name_column_index_retry_ref = self.get_test_name_column_index_retry_ref()
+        self.retry_column_index = self.get_retry_column_index()
         self.retry_ref = []
+        self.retried_tests = []
         self.rows = []
         self.found_tests_amount = 0
 
@@ -39,6 +44,10 @@ class ReportParser:
                 else:
                     self.rows.append(row)
 
+        # Update retried tests
+        if 'retry' in self.report_values:
+            self.set_retried_tests()
+
         # Validate failed tests found
         self.found_tests_amount = len(self.rows) - 1  # All rows without header line
         if not self.found_tests_amount:
@@ -51,12 +60,12 @@ class ReportParser:
         row = []
         # Get STATUS and TEST name
         status = self.get_status(data)
-        test_name = self.get_full_name(data)
+        test_name_for_retry = self.get_test_name_by_retry_key(data)
 
         # Remove test from final rows, if a current test is newer(was retried in test run)
-        if self.is_test_already_present(test_name):
-            if self.is_existing_test_is_older(test_name, data):
-                self.remove_existing(test_name)
+        if self.is_test_already_present(test_name_for_retry):
+            if self.is_existing_test_is_older(test_name_for_retry, data):
+                self.remove_existing_test_from_rows(test_name_for_retry)
             else:
                 return row
 
@@ -74,7 +83,8 @@ class ReportParser:
 
                 # Add 'fullName' name to row array
                 if column['reportValue'] == 'fullName':
-                    row.append(test_name)
+                    full_name = self.get_full_name(data)
+                    row.append(full_name)
 
                 # Add 'package' name to row array
                 if column['reportValue'] == 'package':
@@ -100,6 +110,10 @@ class ReportParser:
                 if column['reportValue'] == 'suite':
                     epic = self.get_suite(data)
                     row.append(epic)
+
+                # Put a placeholder for 'retry' column. It will be updated later with set_retried_tests method
+                if column['reportValue'] == 'retry':
+                    row.append('')
 
                 # Get 'shortMessage' and add to row array
                 if column['reportValue'] == 'shortMessage':
@@ -154,31 +168,14 @@ class ReportParser:
         self.collect_retry_ref(data)
         return row
 
-    def collect_retry_ref(self, data):
-        name = self.get_full_name(data)
-        stop = self.get_stop_time(data)
-        self.retry_ref.append({'name': name, 'stop_time': stop})
-
-    def get_ref_stop_time(self, test_name):
-        for ref in self.retry_ref:
-            if ref['name'] == test_name:
-                return ref['stop_time']
-
-    def is_test_already_present(self, test_name):
-        for row in self.retry_ref:
-            if row['name'] == test_name:
-                return True
-        return False
-
-    def is_existing_test_is_older(self, test_name, data):
-        ref_stop = self.get_ref_stop_time(test_name)
-        actual_stop = self.get_stop_time(data)
-        return ref_stop < actual_stop
-
-    def remove_existing(self, test_name):
-        for row in self.rows:
-            if row[0] == test_name:
-                self.rows.remove(row)
+    def get_report_values(self):
+        report_values = []
+        for column in self.columns:
+            try:
+                report_values.append(column['reportValue'])
+            except KeyError:
+                pass
+        return report_values
 
     @staticmethod
     def get_name(data):
@@ -332,3 +329,82 @@ class ReportParser:
             return data['time']['stop']
         except KeyError:
             return ''
+
+    def get_test_name_key_retry_ref(self):
+        for column in self.columns:
+            try:
+                if column['reportValue'] == 'fullName':
+                    return 'fullName'
+                elif column['reportValue'] == 'name':
+                    return 'name'
+            except KeyError:
+                pass
+
+    def get_test_name_by_retry_key(self, data):
+        try:
+            return data[self.test_name_key_retry_ref]
+        except KeyError:
+            return ''
+
+    def get_test_name_column_index_retry_ref(self):
+        for i, column in enumerate(self.columns):
+            try:
+                if column['reportValue'] == self.test_name_key_retry_ref:
+                    return i
+            except KeyError:
+                pass
+
+    def get_retry_column_index(self):
+        for i, column in enumerate(self.columns):
+            try:
+                if column['reportValue'] == 'retry':
+                    return i
+            except KeyError:
+                pass
+
+    def collect_retry_ref(self, data):
+        name = self.get_full_name(data)
+        stop = self.get_stop_time(data)
+        self.retry_ref.append({'name': name, 'stop_time': stop})
+
+    def get_ref_stop_time(self, test_name_for_retry):
+        for ref in self.retry_ref:
+            if ref['name'] == test_name_for_retry:
+                return ref['stop_time']
+
+    def is_test_already_present(self, test_name_for_retry):
+        for row in self.retry_ref:
+            try:
+                if row['name'] == test_name_for_retry:
+                    self.retried_tests.append(test_name_for_retry)
+                    return True
+            except KeyError:
+                pass
+        return False
+
+    def is_existing_test_is_older(self, test_name_for_retry, data):
+        ref_stop = self.get_ref_stop_time(test_name_for_retry)
+        actual_stop = self.get_stop_time(data)
+        return ref_stop < actual_stop
+
+    def remove_existing_test_from_rows(self, test_name_for_retry):
+        for row in self.rows:
+            if row[self.test_name_column_index_retry_ref] == test_name_for_retry:
+                self.rows.remove(row)
+
+    def set_retried_tests(self):
+        retry_column_index = self.get_retry_column_index()
+        print(self.rows)
+
+        for i, row in enumerate(self.rows):
+            if i == 0:  # Skip a header line
+                continue
+            else:
+                for m, column in enumerate(row):
+                    if m == retry_column_index:
+                        if row[self.test_name_column_index_retry_ref] in self.retried_tests:
+                            row[m] = 'TRUE'
+                            print('TRUE')
+                        else:
+                            row[m] = 'FALSE'
+                            print('FALSE')

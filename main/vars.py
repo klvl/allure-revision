@@ -19,8 +19,8 @@ TOKEN = {
 }
 AVAILABLE_REPORT_STATUSES = ['failed', 'passed', 'skipped', 'broken', 'unknown']
 AVAILABLE_REPORT_VALUES = ['package', 'name', 'fullName', 'epic', 'feature', 'story', 'suite', 'shortMessage',
-                           'message', 'stepFailed', 'category', 'status', 'severity', 'durationMs', 'durationSec',
-                           'durationMin', 'durationHrs']
+                           'message', 'stepFailed', 'category', 'status', 'severity', 'retry', 'durationMs',
+                           'durationSec', 'durationMin', 'durationHrs']
 AVAILABLE_HORIZONTAL_ALIGNMENTS = ['LEFT', 'CENTER', 'RIGHT', 'JUSTIFYLEFT']
 COLUMN_NAMES = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'G', 'K', 'L', 'M', 'N', 'O']
 COLORS = {  # https://kierandixon.com/google-sheets-colors/
