@@ -125,6 +125,12 @@ class ConfigParser:
             except KeyError:
                 continue
 
+        # Check if 'name' or 'fullName' reportValues are present
+        report_values = [item["reportValue"] for item in columns if 'reportValue' in columns]
+        if 'fullName' not in report_values and 'name' not in report_values:
+            print('Please, configure at least "name" or "fullName" as value of a reportValue parameter!')
+            exit()
+
         # Set empty reportValues
         for column in columns:
             try:
