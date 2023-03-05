@@ -64,6 +64,7 @@ class ReportParser:
 
         # Remove test from final rows, if a current test is newer(was retried in test run)
         if self.is_test_already_present(test_name_for_retry):
+            self.retried_tests.append(test_name_for_retry)
             if self.is_existing_test_is_older(test_name_for_retry, data):
                 self.remove_existing_test_from_rows(test_name_for_retry)
             else:
@@ -114,6 +115,11 @@ class ReportParser:
                 # Put a placeholder for 'retry' column. It will be updated later with set_retried_tests method
                 if column['reportValue'] == 'retry':
                     row.append('')
+
+                # Get 'links' and add to row array
+                if column['reportValue'] == 'link':
+                    links = self.get_links(data)
+                    row.append(links)
 
                 # Get 'shortMessage' and add to row array
                 if column['reportValue'] == 'shortMessage':
@@ -317,6 +323,23 @@ class ReportParser:
         return ''
 
     @staticmethod
+    def get_links(data):
+        try:
+            links = data['links']
+            if len(links) == 1:
+                return '=HYPERLINK("' + links[0]['url'] + '", "' + links[0]['name'] + '")'
+            else:
+                report_links = ''
+                for link in links:
+                    if report_links == '':
+                        report_links = link['url']
+                    else:
+                        report_links += '\n' + link['url']
+                return report_links
+        except KeyError:
+            return ''
+
+    @staticmethod
     def get_status(data):
         try:
             return data['status']
@@ -376,7 +399,6 @@ class ReportParser:
         for row in self.retry_ref:
             try:
                 if row['name'] == test_name_for_retry:
-                    self.retried_tests.append(test_name_for_retry)
                     return True
             except KeyError:
                 pass

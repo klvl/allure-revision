@@ -85,7 +85,7 @@ class SpreadsheetUtil:
             self.service.spreadsheets().values().update(
                 spreadsheetId=spreadsheet_id,
                 range=input_range,
-                valueInputOption='RAW',
+                valueInputOption='USER_ENTERED',
                 body=value_range_body).execute()
         except HttpError as err:
             print(err)
