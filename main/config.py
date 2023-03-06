@@ -2,7 +2,7 @@ import json
 
 from sys import exit
 from vars import AVAILABLE_REPORT_STATUSES, AVAILABLE_REPORT_VALUES, AVAILABLE_HORIZONTAL_ALIGNMENTS, COLUMN_NAMES, \
-    COLORS
+    COLORS, AVAILABLE_TEXT_WRAP_STRATEGIES
 
 
 class ConfigParser:
@@ -36,6 +36,83 @@ class ConfigParser:
             return self.get_formatting('headerFormatting', self.config['headerFormatting'])
         except KeyError:
             return False
+
+    def get_formatting(self, path, formatting):
+        final_formatting = formatting
+
+        # Validate background color
+        try:
+            self.validate_color(path + '.backgroundColor', final_formatting['backgroundColor'])
+        except KeyError:
+            pass
+
+        # Set final background color
+        try:
+            if isinstance(final_formatting['backgroundColor'], dict):
+                final_formatting['backgroundColor'] = self.set_spreadsheet_color(final_formatting['backgroundColor'])
+            else:
+                final_formatting['backgroundColor'] = COLORS[final_formatting['backgroundColor']]
+        except KeyError:
+            pass
+
+        # Validate horizontal alignment
+        try:
+            if final_formatting['horizontalAlignment'] not in AVAILABLE_HORIZONTAL_ALIGNMENTS:
+                print('The "' + path + '.horizontalAlignment" value is invalid in config.json!\n' +
+                      'Should be one of the following: ' + str(AVAILABLE_HORIZONTAL_ALIGNMENTS) + ' !')
+                exit()
+        except KeyError:
+            pass
+
+        # Validate wrap strategy
+        try:
+            if final_formatting['wrapStrategy'] not in AVAILABLE_TEXT_WRAP_STRATEGIES:
+                print('The "' + path + '.wrapStrategy" value is invalid in config.json!\n' +
+                      'Should be one of the following: ' + str(AVAILABLE_TEXT_WRAP_STRATEGIES) + ' !')
+                exit()
+        except KeyError:
+            pass
+
+        # Validate if textFormat is present
+        try:
+            final_formatting['textFormat']
+        except KeyError:
+            return final_formatting
+
+        # Validate foreground color
+        try:
+            self.validate_color(path + '.textFormat.foregroundColor', final_formatting['textFormat']['foregroundColor'])
+        except KeyError:
+            pass
+
+        # Set final foreground color
+        try:
+            if isinstance(final_formatting['textFormat']['foregroundColor'], dict):
+                final_formatting['textFormat']['foregroundColor'] = \
+                    self.set_spreadsheet_color(final_formatting['textFormat']['foregroundColor'])
+            else:
+                final_formatting['textFormat']['foregroundColor'] = \
+                    COLORS[final_formatting['textFormat']['foregroundColor']]
+        except KeyError:
+            pass
+
+        # Validate font size
+        try:
+            if final_formatting['textFormat']['fontSize'] <= 0:
+                print('The "' + path + '.headerFormatting.textFormat.fontSize" value should be more then 0!')
+                exit()
+            elif final_formatting['textFormat']['fontSize'] > 400:
+                print('The "' + path + '.headerFormatting.textFormat.fontSize" value should be less then 400!')
+        except KeyError:
+            pass
+
+        # Validate bold
+        try:
+            if final_formatting['textFormat']['bold']:
+                final_formatting['textFormat']['bold'] = json.dumps(True)
+        except KeyError:
+            pass
+        return final_formatting
 
     def get_new_sheet_index(self):
         try:
@@ -241,74 +318,6 @@ class ConfigParser:
                   str(COLORS) + '"!\nAlternatively, you can specify custom color — jon object with "red", ' +
                   '"green" and "blue" parameters!')
             exit()
-
-    def get_formatting(self, path, formatting):
-        final_formatting = formatting
-
-        # Validate background color
-        try:
-            self.validate_color(path + '.backgroundColor', final_formatting['backgroundColor'])
-        except KeyError:
-            pass
-
-        # Set final background color
-        try:
-            if isinstance(final_formatting['backgroundColor'], dict):
-                final_formatting['backgroundColor'] = self.set_spreadsheet_color(final_formatting['backgroundColor'])
-            else:
-                final_formatting['backgroundColor'] = COLORS[final_formatting['backgroundColor']]
-        except KeyError:
-            pass
-
-        # Validate horizontal alignment
-        try:
-            if final_formatting['horizontalAlignment'] not in AVAILABLE_HORIZONTAL_ALIGNMENTS:
-                print('The "' + path + '.horizontalAlignment" value is invalid in config.json!\n' +
-                      'Should be one of the following: ' + str(AVAILABLE_HORIZONTAL_ALIGNMENTS) + ' !')
-                exit()
-        except KeyError:
-            pass
-
-        # Validate if textFormat is present
-        try:
-            final_formatting['textFormat']
-        except KeyError:
-            return final_formatting
-
-        # Validate foreground color
-        try:
-            self.validate_color(path + '.textFormat.foregroundColor', final_formatting['textFormat']['foregroundColor'])
-        except KeyError:
-            pass
-
-        # Set final foreground color
-        try:
-            if isinstance(final_formatting['textFormat']['foregroundColor'], dict):
-                final_formatting['textFormat']['foregroundColor'] = \
-                    self.set_spreadsheet_color(final_formatting['textFormat']['foregroundColor'])
-            else:
-                final_formatting['textFormat']['foregroundColor'] = \
-                    COLORS[final_formatting['textFormat']['foregroundColor']]
-        except KeyError:
-            pass
-
-        # Validate font size
-        try:
-            if final_formatting['textFormat']['fontSize'] <= 0:
-                print('The "' + path + '.headerFormatting.textFormat.fontSize" value should be more then 0!')
-                exit()
-            elif final_formatting['textFormat']['fontSize'] > 400:
-                print('The "' + path + '.headerFormatting.textFormat.fontSize" value should be less then 400!')
-        except KeyError:
-            pass
-
-        # Validate bold
-        try:
-            if final_formatting['textFormat']['bold']:
-                final_formatting['textFormat']['bold'] = json.dumps(True)
-        except KeyError:
-            pass
-        return final_formatting
 
     @staticmethod
     def set_spreadsheet_color(colors):

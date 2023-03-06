@@ -218,7 +218,7 @@ class SpreadsheetUtil:
                 'cell': {
                     'userEnteredFormat': formatting
                 },
-                'fields': 'userEnteredFormat(backgroundColor,textFormat,horizontalAlignment)'
+                'fields': 'userEnteredFormat(backgroundColor,textFormat,horizontalAlignment,wrapStrategy)'
             }
         }
 

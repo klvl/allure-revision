@@ -16,18 +16,27 @@ DEFAULT_CONFIG = {
         {
             "name": "TEST",
             "size": 700,
-            "reportValue": "fullName"
+            "reportValue": "fullName",
+            "formatting": {
+                "wrapStrategy": "CLIP"
+            }
         },
         {
             "name": "MESSAGE",
             "size": 250,
             "reportValue": "shortMessage",
+            "formatting": {
+                "wrapStrategy": "CLIP"
+            }
         },
         {
             "name": "STATUS",
             "size": 100,
             "reportValue": "status",
             "horizontalAlignment": "CENTER",
+            "formatting": {
+                "wrapStrategy": "CLIP"
+            },
             "conditionalFormatting": [
                 {
                     "color": "light_red",
@@ -56,6 +65,9 @@ DEFAULT_CONFIG = {
             "size": 100,
             "horizontalAlignment": "CENTER",
             "dropdown": ["fixed", "passed", "bug"],
+            "formatting": {
+                "wrapStrategy": "CLIP"
+            },
             "conditionalFormatting": [
                 {
                     "color": "light_green",
@@ -74,6 +86,9 @@ DEFAULT_CONFIG = {
         {
             "name": "COMMENTS",
             "size": 450,
+            "formatting": {
+                "wrapStrategy": "CLIP"
+            }
         }
     ]
 }
