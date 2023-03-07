@@ -18,7 +18,8 @@ DEFAULT_CONFIG = {
             "size": 700,
             "reportValue": "fullName",
             "formatting": {
-                "wrapStrategy": "CLIP"
+                "wrapStrategy": "CLIP",
+                "verticalAlignment": "MIDDLE"
             }
         },
         {
@@ -26,7 +27,8 @@ DEFAULT_CONFIG = {
             "size": 250,
             "reportValue": "shortMessage",
             "formatting": {
-                "wrapStrategy": "CLIP"
+                "wrapStrategy": "CLIP",
+                "verticalAlignment": "MIDDLE"
             }
         },
         {
@@ -35,7 +37,8 @@ DEFAULT_CONFIG = {
             "reportValue": "status",
             "horizontalAlignment": "CENTER",
             "formatting": {
-                "wrapStrategy": "CLIP"
+                "wrapStrategy": "CLIP",
+                "verticalAlignment": "MIDDLE"
             },
             "conditionalFormatting": [
                 {
@@ -66,7 +69,8 @@ DEFAULT_CONFIG = {
             "horizontalAlignment": "CENTER",
             "dropdown": ["fixed", "passed", "bug"],
             "formatting": {
-                "wrapStrategy": "CLIP"
+                "wrapStrategy": "CLIP",
+                "verticalAlignment": "MIDDLE"
             },
             "conditionalFormatting": [
                 {
@@ -87,7 +91,8 @@ DEFAULT_CONFIG = {
             "name": "COMMENTS",
             "size": 450,
             "formatting": {
-                "wrapStrategy": "CLIP"
+                "wrapStrategy": "CLIP",
+                "verticalAlignment": "MIDDLE"
             }
         }
     ]

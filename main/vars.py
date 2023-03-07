@@ -22,6 +22,7 @@ AVAILABLE_REPORT_VALUES = ['package', 'name', 'fullName', 'epic', 'feature', 'st
                            'message', 'stepFailed', 'category', 'status', 'severity', 'retry', 'link', 'durationMs',
                            'durationSec', 'durationMin', 'durationHrs']
 AVAILABLE_HORIZONTAL_ALIGNMENTS = ['LEFT', 'CENTER', 'RIGHT', 'JUSTIFYLEFT']
+AVAILABLE_VERTICAL_ALIGNMENTS = ['TOP', 'MIDDLE', 'BOTTOM']
 AVAILABLE_TEXT_WRAP_STRATEGIES = ['WRAP', 'OVERFLOW', 'CLIP']
 COLUMN_NAMES = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'G', 'K', 'L', 'M', 'N', 'O']
 COLORS = {  # https://kierandixon.com/google-sheets-colors/

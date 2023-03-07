@@ -2,7 +2,7 @@ import json
 
 from sys import exit
 from vars import AVAILABLE_REPORT_STATUSES, AVAILABLE_REPORT_VALUES, AVAILABLE_HORIZONTAL_ALIGNMENTS, COLUMN_NAMES, \
-    COLORS, AVAILABLE_TEXT_WRAP_STRATEGIES
+    COLORS, AVAILABLE_TEXT_WRAP_STRATEGIES, AVAILABLE_VERTICAL_ALIGNMENTS
 
 
 class ConfigParser:
@@ -60,6 +60,15 @@ class ConfigParser:
             if final_formatting['horizontalAlignment'] not in AVAILABLE_HORIZONTAL_ALIGNMENTS:
                 print('The "' + path + '.horizontalAlignment" value is invalid in config.json!\n' +
                       'Should be one of the following: ' + str(AVAILABLE_HORIZONTAL_ALIGNMENTS) + ' !')
+                exit()
+        except KeyError:
+            pass
+
+        # Validate vertical alignment
+        try:
+            if final_formatting['verticalAlignment'] not in AVAILABLE_VERTICAL_ALIGNMENTS:
+                print('The "' + path + '.verticalAlignment" value is invalid in config.json!\n' +
+                      'Should be one of the following: ' + str(AVAILABLE_VERTICAL_ALIGNMENTS) + ' !')
                 exit()
         except KeyError:
             pass
