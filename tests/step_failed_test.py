@@ -29,7 +29,9 @@ EXPECTED_ROWS = [
     ['TEST', 'STEP FAILED'],
     ['io.klvl.CategoriesTest.testCategoryByMessageRegExp', 'failStepD'],
     ['io.klvl.CategoriesTest.testCategoryByMessageRegExp2', 'failStepE'],
-    ['io.klvl.CategoriesTest.testSimpleCategory', 'failStepC']
+    ['io.klvl.CategoriesTest.testSimpleCategory', 'failStepC'],
+    ['io.klvl.FlakyTest.testFlakyFailed', ''],
+    ['io.klvl.RetryTest.testRetryStatusNotChangedAfterRetry', '']
 ]
 
 

@@ -44,11 +44,13 @@ EXPECTED_ROWS = [
         ['io.klvl.BrokenTest.testBroken', 'Cannot invoke "String.isEmpty()" because "nullable" is null'],
         ['io.klvl.CategoriesTest.testCategoryByMessageRegExp',
          'The status code did not match expected!\nTry to check logs!'],
-
         ['io.klvl.CategoriesTest.testCategoryByMessageRegExp2',
          'The status code did not match expected!\nTry to check logs!'],
-
         ['io.klvl.CategoriesTest.testSimpleCategory', 'null'],
+        ['io.klvl.FlakyTest.testFlakyBroken',
+         'Cannot invoke "String.contains(java.lang.CharSequence)" because "nulled" is null'],
+        ['io.klvl.FlakyTest.testFlakyFailed', 'flaky failure!'],
+        ['io.klvl.RetryTest.testRetryStatusNotChangedAfterRetry', 'not changed after retry'],
         ['io.klvl.SkippedTest.testSkippedFirst', 'The first skipped!'],
         ['io.klvl.SkippedTest.testSkippedSecond', 'The second skipped!']
     ],
@@ -58,6 +60,10 @@ EXPECTED_ROWS = [
         ['io.klvl.CategoriesTest.testCategoryByMessageRegExp', 'The status code did not match expected!'],
         ['io.klvl.CategoriesTest.testCategoryByMessageRegExp2', 'The status code did not match expected!'],
         ['io.klvl.CategoriesTest.testSimpleCategory', 'null'],
+        ['io.klvl.FlakyTest.testFlakyBroken',
+         'Cannot invoke "String.contains(java.lang.CharSequence)" because "nulled" is null'],
+        ['io.klvl.FlakyTest.testFlakyFailed', 'flaky failure!'],
+        ['io.klvl.RetryTest.testRetryStatusNotChangedAfterRetry', 'not changed after retry'],
         ['io.klvl.SkippedTest.testSkippedFirst', 'The first skipped!'],
         ['io.klvl.SkippedTest.testSkippedSecond', 'The second skipped!']
     ]

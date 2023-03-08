@@ -1,5 +1,6 @@
 "Category","FAILED","BROKEN","PASSED","SKIPPED","UNKNOWN"
-"All Failed Tests","3","0","0","0","0"
+"All Failed Tests","4","0","0","0","0"
 "Response status code mismatch","2","0","0","0","0"
-"Broken tests","0","1","0","0","0"
+"Product defects","1","0","0","0","0"
+"Broken tests","0","2","0","0","0"
 "Known issues","0","0","0","0","2"

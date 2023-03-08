@@ -31,8 +31,11 @@ EXPECTED_ROWS = [
     ['io.klvl.CategoriesTest.testCategoryByMessageRegExp', 'Response status code mismatch'],
     ['io.klvl.CategoriesTest.testCategoryByMessageRegExp2', 'Response status code mismatch'],
     ['io.klvl.CategoriesTest.testSimpleCategory', 'All Failed Tests'],
+    ['io.klvl.FlakyTest.testFlakyBroken', 'Broken tests'],
+    ['io.klvl.FlakyTest.testFlakyFailed', 'Product defects'],
     ['io.klvl.IssueTest.testIssue', 'Known issues'],
-    ['io.klvl.IssueTest.testIssues', 'Known issues']
+    ['io.klvl.IssueTest.testIssues', 'Known issues'],
+    ['io.klvl.RetryTest.testRetryStatusNotChangedAfterRetry', 'All Failed Tests']
 ]
 
 
