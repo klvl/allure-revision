@@ -77,6 +77,11 @@ class ReportParser:
                 if not column['reportValue']:
                     row.append('')
 
+                # Add 'package' name to row array
+                if column['reportValue'] == 'package':
+                    package = self.get_package(data)
+                    row.append(package)
+
                 # Add 'name' to row array
                 if column['reportValue'] == 'name':
                     name = self.get_name(data)
@@ -86,11 +91,6 @@ class ReportParser:
                 if column['reportValue'] == 'fullName':
                     full_name = self.get_full_name(data)
                     row.append(full_name)
-
-                # Add 'package' name to row array
-                if column['reportValue'] == 'package':
-                    package = self.get_package(data)
-                    row.append(package)
 
                 # Add 'epic' name to row array
                 if column['reportValue'] == 'epic':
@@ -112,23 +112,14 @@ class ReportParser:
                     epic = self.get_suite(data)
                     row.append(epic)
 
-                # Put a placeholder for 'retry' column. It will be updated later with set_retried_tests method
-                if column['reportValue'] == 'retry':
-                    row.append('')
-
-                # Get 'links' and add to row array
-                if column['reportValue'] == 'link':
-                    links = self.get_links(data)
-                    row.append(links)
+                # Get 'message' and add to row array
+                if column['reportValue'] == 'message':
+                    message = self.get_message(data)
+                    row.append(message)
 
                 # Get 'shortMessage' and add to row array
                 if column['reportValue'] == 'shortMessage':
                     message = self.get_message(data).partition('\n')[0]
-                    row.append(message)
-
-                # Get 'message' and add to row array
-                if column['reportValue'] == 'message':
-                    message = self.get_message(data)
                     row.append(message)
 
                 # Get 'stepFailed' and add to row array
@@ -141,10 +132,28 @@ class ReportParser:
                     category = self.get_category(data)
                     row.append(category)
 
+                # Add 'status' to row array
+                if column['reportValue'] == 'status':
+                    row.append(status)
+
                 # Get 'severity' and add to row array
                 if column['reportValue'] == 'severity':
                     severity = self.get_severity(data)
                     row.append(severity)
+
+                # Put a placeholder for 'retry' column. It will be updated later with set_retried_tests method
+                if column['reportValue'] == 'retry':
+                    row.append('')
+
+                # Get 'links' and add to row array
+                if column['reportValue'] == 'link':
+                    links = self.get_links(data)
+                    row.append(links)
+
+                # Get 'flaky' and add to row array
+                if column['reportValue'] == 'flaky':
+                    flaky = self.get_flaky(data)
+                    row.append(flaky)
 
                 # Get 'durationMs' and add to row array
                 if column['reportValue'] == 'durationMs':
@@ -165,10 +174,6 @@ class ReportParser:
                 if column['reportValue'] == 'durationHrs':
                     duration = self.get_duration(data) / 1000 / 60 / 60
                     row.append(duration)
-
-                # Add 'status' to row array
-                if column['reportValue'] == 'status':
-                    row.append(status)
 
         # Collect test name and stop time
         self.collect_retry_ref(data)
@@ -340,6 +345,16 @@ class ReportParser:
             return ''
 
     @staticmethod
+    def get_flaky(data):
+        try:
+            if data['flaky']:
+                return '=TRUE'
+            else:
+                return '=FALSE'
+        except KeyError:
+            return '=FALSE'
+
+    @staticmethod
     def get_status(data):
         try:
             return data['status']
@@ -416,7 +431,6 @@ class ReportParser:
 
     def set_retried_tests(self):
         retry_column_index = self.get_retry_column_index()
-        print(self.rows)
 
         for i, row in enumerate(self.rows):
             if i == 0:  # Skip a header line
@@ -425,8 +439,6 @@ class ReportParser:
                 for m, column in enumerate(row):
                     if m == retry_column_index:
                         if row[self.test_name_column_index_retry_ref] in self.retried_tests:
-                            row[m] = 'TRUE'
-                            print('TRUE')
+                            row[m] = '=TRUE'
                         else:
-                            row[m] = 'FALSE'
-                            print('FALSE')
+                            row[m] = '=FALSE'

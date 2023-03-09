@@ -18,9 +18,9 @@ TOKEN = {
     'scopes': ['https://www.googleapis.com/auth/spreadsheets']
 }
 AVAILABLE_REPORT_STATUSES = ['failed', 'passed', 'skipped', 'broken', 'unknown']
-AVAILABLE_REPORT_VALUES = ['package', 'name', 'fullName', 'epic', 'feature', 'story', 'suite', 'shortMessage',
-                           'message', 'stepFailed', 'category', 'status', 'severity', 'retry', 'link', 'durationMs',
-                           'durationSec', 'durationMin', 'durationHrs']
+AVAILABLE_REPORT_VALUES = ['package', 'name', 'fullName', 'epic', 'feature', 'story', 'suite', 'message',
+                           'shortMessage', 'stepFailed', 'category', 'status', 'severity', 'retry', 'link', 'flaky',
+                           'durationMs', 'durationSec', 'durationMin', 'durationHrs']
 AVAILABLE_HORIZONTAL_ALIGNMENTS = ['LEFT', 'CENTER', 'RIGHT', 'JUSTIFYLEFT']
 AVAILABLE_VERTICAL_ALIGNMENTS = ['TOP', 'MIDDLE', 'BOTTOM']
 AVAILABLE_TEXT_WRAP_STRATEGIES = ['WRAP', 'OVERFLOW', 'CLIP']
