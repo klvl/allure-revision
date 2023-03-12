@@ -8,14 +8,50 @@ class ReportParser:
         self.test_cases_path = test_cases_path
         self.columns = columns
         self.statuses = statuses
-        self.report_values = self.get_report_values()
-        self.test_name_key_retry_ref = self.get_test_name_key_retry_ref()
-        self.test_name_column_index_retry_ref = self.get_test_name_column_index_retry_ref()
-        self.retry_column_index = self.get_retry_column_index()
-        self.retry_ref = []
-        self.retried_tests = []
         self.rows = []
+        self.final_test_ids = self.collect_final_test_ids()
         self.found_tests_amount = 0
+
+    def collect_final_test_ids(self):
+        final_test_ids = []
+        # Get last run uid(s)
+        for file in self.test_cases_path.iterdir():
+            if not file.is_dir():
+                # Open file and load json data object
+                try:
+                    f = open(file)
+                except UnicodeDecodeError:
+                    f = open(file, encoding='utf8')
+
+                data = json.load(f)
+
+                # Get full_name, uid and stop_time
+                current_full_name = self.get_full_name(data)
+                current_uid = self.get_uid(data)
+                current_stop_time = self.get_stop_time(data)
+
+                # Get existing uid and stop_time
+                existing_test_data = [item for item in final_test_ids if item['full_name'] == current_full_name]
+                existing_test_uid = existing_test_data[0]['uid'] if len(existing_test_data) == 1 else None
+                existing_test_stop_time = existing_test_data[0]['stop_time'] if len(existing_test_data) == 1 else None
+
+                if existing_test_uid is None:  # if this test name is not present in final_test_ids just add it
+                    final_test_ids.append({
+                        'full_name': current_full_name,
+                        'uid': current_uid,
+                        'stop_time': current_stop_time
+                    })
+                else:  # if this test name is present in final_test_ids
+                    if existing_test_stop_time > current_stop_time:
+                        continue
+                    else:
+                        for item in final_test_ids:
+                            if item['full_name'] == current_full_name:
+                                item['uid'] = current_uid
+                                item['stop_time'] = current_stop_time
+                            else:
+                                pass
+        return final_test_ids
 
     def get_rows(self):
         # Add header row
@@ -35,18 +71,19 @@ class ReportParser:
 
                 data = json.load(f)
 
-                # Get row
-                row = self.get_row(data)
+                # Check if the file is final retry
+                uid = self.get_uid(data)
+                if len([item for item in self.final_test_ids if item['uid'] == uid]) == 1:  # if is in final_ids
+                    # Get row
+                    row = self.get_row(data)
 
-                # Continue loop if row is empty, otherwise, add row, to final list of rows
-                if not row:
-                    continue
+                    # Continue loop if row is empty, otherwise, add row, to final list of rows
+                    if not row:
+                        continue
+                    else:
+                        self.rows.append(row)
                 else:
-                    self.rows.append(row)
-
-        # Update retried tests
-        if 'retry' in self.report_values:
-            self.set_retried_tests()
+                    pass
 
         # Validate failed tests found
         self.found_tests_amount = len(self.rows) - 1  # All rows without header line
@@ -60,15 +97,6 @@ class ReportParser:
         row = []
         # Get STATUS and TEST name
         status = self.get_status(data)
-        test_name_for_retry = self.get_test_name_by_retry_key(data)
-
-        # Remove test from final rows, if a current test is newer(was retried in test run)
-        if self.is_test_already_present(test_name_for_retry):
-            self.retried_tests.append(test_name_for_retry)
-            if self.is_existing_test_is_older(test_name_for_retry, data):
-                self.remove_existing_test_from_rows(test_name_for_retry)
-            else:
-                return row
 
         # If status is passed return empty row
         if status in self.statuses:
@@ -141,9 +169,10 @@ class ReportParser:
                     severity = self.get_severity(data)
                     row.append(severity)
 
-                # Put a placeholder for 'retry' column. It will be updated later with set_retried_tests method
+                # Get 'retry' and add to row array
                 if column['reportValue'] == 'retry':
-                    row.append('')
+                    retry = self.get_retry(data)
+                    row.append(retry)
 
                 # Get 'links' and add to row array
                 if column['reportValue'] == 'link':
@@ -174,9 +203,6 @@ class ReportParser:
                 if column['reportValue'] == 'durationHrs':
                     duration = self.get_duration(data) / 1000 / 60 / 60
                     row.append(duration)
-
-        # Collect test name and stop time
-        self.collect_retry_ref(data)
         return row
 
     def get_report_values(self):
@@ -187,6 +213,13 @@ class ReportParser:
             except KeyError:
                 pass
         return report_values
+
+    @staticmethod
+    def get_uid(data):
+        try:
+            return data['uid']
+        except KeyError:
+            return ''
 
     @staticmethod
     def get_name(data):
@@ -326,6 +359,20 @@ class ReportParser:
         except KeyError:
             return ''
         return ''
+
+    @staticmethod
+    def get_retries_count(data):
+        try:
+            return data['retriesCount']
+        except KeyError:
+            return ''
+
+    def get_retry(self, data):
+        retries_count = self.get_retries_count(data)
+        if retries_count > 0:
+            return '=TRUE'
+        else:
+            return '=FALSE'
 
     @staticmethod
     def get_links(data):
