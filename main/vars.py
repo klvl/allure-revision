@@ -19,8 +19,8 @@ TOKEN = {
 }
 AVAILABLE_REPORT_STATUSES = ['failed', 'passed', 'skipped', 'broken', 'unknown']
 AVAILABLE_REPORT_VALUES = ['package', 'name', 'fullName', 'epic', 'feature', 'story', 'suite', 'message',
-                           'shortMessage', 'stepFailed', 'category', 'status', 'severity', 'retry', 'link', 'flaky',
-                           'durationMs', 'durationSec', 'durationMin', 'durationHrs']
+                           'shortMessage', 'stepFailed', 'category', 'status', 'severity', 'retry', 'retriesCount',
+                           'link', 'flaky', 'durationMs', 'durationSec', 'durationMin', 'durationHrs']
 AVAILABLE_HORIZONTAL_ALIGNMENTS = ['LEFT', 'CENTER', 'RIGHT', 'JUSTIFYLEFT']
 AVAILABLE_VERTICAL_ALIGNMENTS = ['TOP', 'MIDDLE', 'BOTTOM']
 AVAILABLE_TEXT_WRAP_STRATEGIES = ['WRAP', 'OVERFLOW', 'CLIP']

@@ -174,6 +174,11 @@ class ReportParser:
                     retry = self.get_retry(data)
                     row.append(retry)
 
+                # Get 'retry' and add to row array
+                if column['reportValue'] == 'retriesCount':
+                    retries_count = self.get_retries_count(data)
+                    row.append(retries_count)
+
                 # Get 'links' and add to row array
                 if column['reportValue'] == 'link':
                     links = self.get_links(data)

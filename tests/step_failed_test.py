@@ -40,4 +40,3 @@ def test_step_failed():
     actual_rows = sorted(report_parser.get_rows())
 
     assert actual_rows == EXPECTED_ROWS
-
