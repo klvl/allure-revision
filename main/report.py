@@ -179,6 +179,11 @@ class ReportParser:
                     retries_count = self.get_retries_count(data)
                     row.append(retries_count)
 
+                # Get 'retriesStatusChange' and add to row array
+                if column['reportValue'] == 'retriesStatusChange':
+                    retries_status_change = self.get_retries_satus_change(data)
+                    row.append(retries_status_change)
+
                 # Get 'links' and add to row array
                 if column['reportValue'] == 'link':
                     links = self.get_links(data)
@@ -369,6 +374,13 @@ class ReportParser:
     def get_retries_count(data):
         try:
             return data['retriesCount']
+        except KeyError:
+            return ''
+
+    @staticmethod
+    def get_retries_satus_change(data):
+        try:
+            return data['retriesStatusChange']
         except KeyError:
             return ''
 
