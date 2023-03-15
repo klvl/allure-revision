@@ -184,6 +184,11 @@ class ReportParser:
                     retries_status_change = self.get_retries_satus_change(data)
                     row.append(retries_status_change)
 
+                # Get 'newFailed' and add to row array
+                if column['reportValue'] == 'newFailed':
+                    new_failed = self.get_new_failed(data)
+                    row.append(new_failed)
+
                 # Get 'links' and add to row array
                 if column['reportValue'] == 'link':
                     links = self.get_links(data)
@@ -381,6 +386,13 @@ class ReportParser:
     def get_retries_satus_change(data):
         try:
             return data['retriesStatusChange']
+        except KeyError:
+            return ''
+
+    @staticmethod
+    def get_new_failed(data):
+        try:
+            return data['newFailed']
         except KeyError:
             return ''
 

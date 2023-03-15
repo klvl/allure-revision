@@ -18,15 +18,15 @@ COLUMNS = [
         'reportValue': 'fullName'
     },
     {
-        'name': 'STATUS CHANGED AFTER RETRY',
-        'reportValue': 'retriesStatusChange'
+        'name': 'NEW FAILED',
+        'reportValue': 'newFailed'
     }
 ]
 
 STATUSES = ['failed', 'broken', 'passed', 'skipped', 'unknown']
 
 EXPECTED_ROWS = [
-    ['FULL NAME', 'STATUS CHANGED AFTER RETRY'],
+    ['FULL NAME', 'NEW FAILED'],
     ['io.klvl.AttachmentTest.testSimpleAttach', False],
     ['io.klvl.BrokenTest.testBroken', False],
     ['io.klvl.CategoriesTest.testCategoryByMessageRegExp', False],
@@ -34,16 +34,16 @@ EXPECTED_ROWS = [
     ['io.klvl.CategoriesTest.testSimpleCategory', False],
     ['io.klvl.DescriptionTest.testDescription', False],
     ['io.klvl.FlakyTest.testFlakyBroken', False],
-    ['io.klvl.FlakyTest.testFlakyFailed', False],
+    ['io.klvl.FlakyTest.testFlakyFailed', True],
     ['io.klvl.FlakyTest.testFlakyPassed', False],
     ['io.klvl.IssueTest.testIssue', False],
     ['io.klvl.IssueTest.testIssues', False],
     ['io.klvl.LinkTest.testLink', False],
     ['io.klvl.LinkTest.testNamedLink', False],
     ['io.klvl.ParametersTest.testParameters', False],
-    ['io.klvl.RetryTest.testRetry1', True],
-    ['io.klvl.RetryTest.testRetry2', True],
-    ['io.klvl.RetryTest.testRetry3', True],
+    ['io.klvl.RetryTest.testRetry1', False],
+    ['io.klvl.RetryTest.testRetry2', False],
+    ['io.klvl.RetryTest.testRetry3', False],
     ['io.klvl.RetryTest.testRetryMoreRetries', False],
     ['io.klvl.RetryTest.testRetryStatusNotChangedAfterRetry', False],
     ['io.klvl.SimpleTest.testDescriptiveTestName', False],
@@ -55,7 +55,7 @@ EXPECTED_ROWS = [
 ]
 
 
-def test_retries_status_change():
+def test_new_failed():
     report_parser = ReportParser(TEST_CASES_PATH, COLUMNS, STATUSES)
     actual_rows = sorted(report_parser.get_rows())
 
