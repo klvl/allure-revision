@@ -194,6 +194,11 @@ class ReportParser:
                     new_failed = self.get_new_broken(data)
                     row.append(new_failed)
 
+                # Get 'newPassed' and add to row array
+                if column['reportValue'] == 'newPassed':
+                    new_failed = self.get_new_passed(data)
+                    row.append(new_failed)
+
                 # Get 'links' and add to row array
                 if column['reportValue'] == 'link':
                     links = self.get_links(data)
@@ -405,6 +410,13 @@ class ReportParser:
     def get_new_broken(data):
         try:
             return data['newBroken']
+        except KeyError:
+            return ''
+
+    @staticmethod
+    def get_new_passed(data):
+        try:
+            return data['newPassed']
         except KeyError:
             return ''
 
