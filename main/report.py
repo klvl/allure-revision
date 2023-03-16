@@ -189,6 +189,11 @@ class ReportParser:
                     new_failed = self.get_new_failed(data)
                     row.append(new_failed)
 
+                # Get 'newBroken' and add to row array
+                if column['reportValue'] == 'newBroken':
+                    new_failed = self.get_new_broken(data)
+                    row.append(new_failed)
+
                 # Get 'links' and add to row array
                 if column['reportValue'] == 'link':
                     links = self.get_links(data)
@@ -393,6 +398,13 @@ class ReportParser:
     def get_new_failed(data):
         try:
             return data['newFailed']
+        except KeyError:
+            return ''
+
+    @staticmethod
+    def get_new_broken(data):
+        try:
+            return data['newBroken']
         except KeyError:
             return ''
 
