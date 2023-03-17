@@ -4,6 +4,12 @@
 
 The tool to parse allure-report and upload raw results to spreadsheet API.
 
+**Outline:**
+* [Setup](#setup)
+* [Usage options](#usage-options)
+  * [Command line](#command-line)
+  * [Docker](#docker)
+
 ## Setup
 
 * Clone the project
@@ -23,20 +29,51 @@ python3 main/make.py
 * Click on `Go to allure-revision-app (unsafe)` link
 * Click `Continue`
 
-Congratulations! The refresh token is copied to your clipboard. Follow [Usage](#usage) section for further usage.
+Congratulations! The refresh token is copied to your clipboard. Follow [Usage options](#usage-options) section for further usage.
 
 
-## Usage
+## Usage options
 
-Please, complete steps from the [Setup](#setup) section prior to use a tool to obtain a refresh token.
+Please, complete steps from the [Setup](#setup) section prior to use a tool to obtain a refresh token. There are also
+a few things to complete before using a tool:
 
-* Create a new Google spreadsheet or open existing  
-* Open your spreadsheet, for example [https://docs.google.com/spreadsheets/d/1GOOG39g3lESP0rEADS5EeetIDtoE9XtRactAndUseE8/](https://docs.google.com/spreadsheets/d/1GOOG39g3lESP0rEADS5EeetIDtoE9XtRactAndUseE8/)  
-* Find your spreadsheet ID in URL, which is `1GOOG39g3lESP0rEADS5EeetIDtoE9XtRactAndUseE8` in example  
-* Generate allure report  
+* Create a new Google spreadsheet or open existing
+* Open your spreadsheet, for example [https://docs.google.com/spreadsheets/d/1GOOG39g3lESP0rEADS5EeetIDtoE9XtRactAndUseE8/](https://docs.google.com/spreadsheets/d/1GOOG39g3lESP0rEADS5EeetIDtoE9XtRactAndUseE8/)
+* Find your spreadsheet ID in URL, which is `1GOOG39g3lESP0rEADS5EeetIDtoE9XtRactAndUseE8` in example
+* Generate allure report
+
+
+### Command line
+ 
 * Run revision  
 ```shell
-python3 main/make.py --id <spreadsheet-id> --token <refresh-token> --report_path path/to/allure-report
+python3 main/make.py --id <spreadsheet-id> --token <refresh-token> --report_path relative/path/to/allure-report
+```
+
+
+### Docker
+
+* Build docker image
+```shell
+docker build -t allure-revision .
+```
+* Run docker
+```shell
+docker run -it --rm \
+-v /full/path/to/allure-report/:/allure-revision/allure-report \
+-e ID=<spreadsheet-id> \
+-e TOKEN=<refresh-token> \
+allure-revision
+```
+
+OR:
+
+* Run wih custom config
+```shell
+docker run -it --rm \
+-v /full/path/to/allure-report/:/allure-revision/allure-report \
+-v /full/path/to/config.json:/allure-revision/config.json \
+allure-revision
 ```
 
 
