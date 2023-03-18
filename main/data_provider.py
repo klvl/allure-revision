@@ -57,7 +57,7 @@ class DataProvider:
         if self.args_parser.spreadsheet_id:
             return self.args_parser.spreadsheet_id
         elif self.config_parser.spreadsheet_id:
-            return self.spreadsheet_id
+            return self.config_parser.spreadsheet_id
         else:
             print('The "id" (spreadsheet ID) should be passed as --id argument or be specified in config.json!')
             exit()
@@ -67,7 +67,7 @@ class DataProvider:
         if self.args_parser.token:
             token = self.args_parser.token
         elif self.config_parser.token:
-            token = self.token
+            token = self.config_parser.token
 
         if token is not None:
             TOKEN['refresh_token'] = token
